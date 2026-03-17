@@ -286,6 +286,80 @@ button{font-family:inherit;cursor:pointer;}
 .score-share-btn.done{border-color:rgba(107,203,119,.4);background:rgba(107,203,119,.08);color:var(--grn);}
 .end-footer{font-size:10px;color:#2a2a2a;text-align:center;line-height:1.8;}
 
+/* ============================================================ MODAL ISTRUZIONI */
+.modal-overlay{
+  position:fixed;inset:0;background:rgba(0,0,0,.75);
+  z-index:300;display:flex;align-items:center;justify-content:center;
+  opacity:0;pointer-events:none;transition:opacity .25s ease;
+  backdrop-filter:blur(6px);
+}
+.modal-overlay.open{opacity:1;pointer-events:all;}
+.modal{
+  background:#0f0f1a;border:1px solid var(--bord);border-radius:22px;
+  width:100%;max-width:680px;max-height:85vh;
+  display:flex;flex-direction:column;overflow:hidden;
+  transform:translateY(20px) scale(.97);transition:transform .25s ease;
+  box-shadow:0 24px 80px rgba(0,0,0,.6);
+}
+.modal-overlay.open .modal{transform:translateY(0) scale(1);}
+.modal-header{
+  display:flex;align-items:center;justify-content:space-between;
+  padding:22px 28px 16px;border-bottom:1px solid var(--bord);flex-shrink:0;
+}
+.modal-title{font-family:'Bebas Neue',cursive;font-size:28px;letter-spacing:2px;
+  background:linear-gradient(135deg,var(--pur),var(--cyn));
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;}
+.modal-close{
+  width:34px;height:34px;border-radius:8px;border:1px solid var(--bord);
+  background:rgba(255,255,255,.05);color:var(--mut);font-size:18px;
+  cursor:pointer;display:flex;align-items:center;justify-content:center;
+  transition:all .15s;flex-shrink:0;
+}
+.modal-close:hover{background:rgba(255,255,255,.12);color:#fff;}
+.modal-body{padding:24px 28px;overflow-y:auto;flex:1;}
+.modal-body::-webkit-scrollbar{width:4px;}
+.modal-body::-webkit-scrollbar-thumb{background:#222;border-radius:4px;}
+
+/* istruzioni styling */
+.instr-section{margin-bottom:24px;}
+.instr-section:last-child{margin-bottom:0;}
+.instr-label{
+  font-size:9px;letter-spacing:4px;color:var(--pur);text-transform:uppercase;
+  margin-bottom:10px;display:flex;align-items:center;gap:8px;
+}
+.instr-label::after{content:'';flex:1;height:1px;background:rgba(168,85,247,.2);}
+.instr-text{font-size:13px;color:#aaa;line-height:1.75;}
+.instr-text strong{color:#ddd;}
+.instr-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:10px;}
+.instr-card{
+  background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.07);
+  border-radius:10px;padding:10px 12px;
+}
+.instr-card-emoji{font-size:18px;margin-bottom:4px;}
+.instr-card-name{font-size:11px;font-weight:700;color:#ddd;margin-bottom:2px;}
+.instr-card-desc{font-size:10px;color:#555;line-height:1.4;}
+.stat-pill{
+  display:inline-flex;align-items:center;gap:5px;
+  background:rgba(255,255,255,.05);border-radius:6px;
+  padding:3px 8px;font-size:11px;margin:3px 4px 3px 0;
+}
+.instr-tip{
+  background:rgba(168,85,247,.08);border:1px solid rgba(168,85,247,.2);
+  border-radius:10px;padding:12px 14px;font-size:12px;color:#999;
+  line-height:1.6;margin-top:10px;
+}
+.instr-tip strong{color:var(--pur);}
+
+/* pulsante istruzioni */
+.how-btn{
+  display:flex;align-items:center;justify-content:center;gap:8px;
+  width:100%;margin-top:10px;padding:13px;border-radius:12px;
+  border:1px solid rgba(76,201,240,.25);background:rgba(76,201,240,.06);
+  color:var(--cyn);font-family:'Space Mono',monospace;font-size:12px;font-weight:700;
+  transition:all .18s;letter-spacing:1px;cursor:pointer;
+}
+.how-btn:hover{background:rgba(76,201,240,.14);transform:translateY(-1px);}
+
 /* ============================================================ ANIMATIONS */
 @keyframes fadeUp{from{opacity:0;transform:translateY(14px);}to{opacity:1;transform:translateY(0);}}
 @keyframes fadeIn{from{opacity:0;}to{opacity:1;}}
@@ -426,6 +500,8 @@ button{font-family:inherit;cursor:pointer;}
       <button class="start-btn" id="start-btn" disabled>INIZIA LA VITA 🚀</button>
     </div>
 
+    <button class="how-btn" id="how-btn">📖 Come si gioca?</button>
+
     <button class="share-btn-intro" id="share-btn">
       <span>🔗</span>
       <span>Condividi il gioco</span>
@@ -433,6 +509,116 @@ button{font-family:inherit;cursor:pointer;}
     </button>
 
     <p class="intro-footer-right">© Beyond The Platforms · <a href="https://www.beyondtheplatforms.com" target="_blank" rel="noopener" class="footer-link">beyondtheplatforms.com</a></p>
+  </div>
+</div>
+
+<!-- ==================== MODAL ISTRUZIONI ==================== -->
+<div class="modal-overlay" id="modal-overlay">
+  <div class="modal">
+    <div class="modal-header">
+      <span class="modal-title">📖 Come si gioca</span>
+      <button class="modal-close" id="modal-close">✕</button>
+    </div>
+    <div class="modal-body">
+
+      <!-- OBIETTIVO -->
+      <div class="instr-section">
+        <div class="instr-label">🎯 Obiettivo</div>
+        <p class="instr-text">
+          Sei <strong>Gianluca il Palestrato</strong>, zanza milanese doc. Hai <strong>30 giorni</strong> per diventare
+          l'icona più iconico del feed. Accumula follower, mantieni la vibe alta e non esaurire le energie.
+          Raggiungi <strong>400 follower</strong> per vincere in anticipo — oppure sopravvivi fino al giorno 30.
+        </p>
+      </div>
+
+      <!-- STATS -->
+      <div class="instr-section">
+        <div class="instr-label">📊 Le tue statistiche</div>
+        <p class="instr-text" style="margin-bottom:8px;">Tieni d'occhio questi 5 indicatori:</p>
+        <div>
+          <span class="stat-pill" style="color:#FF6B6B">👥 Follower — fino a 500. Arriva a 400 e vinci.</span>
+          <span class="stat-pill" style="color:#FFE66D">⚡ Energia — se scende a 0 crolli e perdi.</span>
+          <span class="stat-pill" style="color:#6BCB77">💶 Soldi — servono per palestra, drop e aperitivo.</span>
+          <span class="stat-pill" style="color:#A855F7">✨ Vibe — determina l'espressione di Gianluca e il tuo stato d'animo.</span>
+          <span class="stat-pill" style="color:#4CC9F0">📚 Studio — non serve per vincere, ma fa curriculum.</span>
+        </div>
+      </div>
+
+      <!-- TURNI -->
+      <div class="instr-section">
+        <div class="instr-label">⚡ Il turno</div>
+        <p class="instr-text">
+          Ogni giorno hai <strong>3 azioni disponibili</strong>. Scegli con saggezza cosa fare tra le 8 attività.
+          Quando hai finito le azioni — o vuoi passare al giorno dopo — clicca
+          <strong>"😴 Vai a letto"</strong>: recuperi energia e scattano eventuali <strong>eventi casuali</strong>.
+          Alcune azioni hanno un <strong>cooldown</strong> (devi aspettare giorni prima di rifarle).
+        </p>
+      </div>
+
+      <!-- AZIONI -->
+      <div class="instr-section">
+        <div class="instr-label">🎮 Le 8 azioni</div>
+        <div class="instr-grid">
+          <div class="instr-card">
+            <div class="instr-card-emoji">📱</div>
+            <div class="instr-card-name">Posta un Reel</div>
+            <div class="instr-card-desc">Guadagni follower ma consumi energia. Rischio virale: +50 follower bonus. Cooldown 2 giorni.</div>
+          </div>
+          <div class="instr-card">
+            <div class="instr-card-emoji">💪</div>
+            <div class="instr-card-name">Vai in palestra</div>
+            <div class="instr-card-desc">Costa 10€. Aumenta la vibe e qualche follower, ma stanca. Cooldown 1 giorno.</div>
+          </div>
+          <div class="instr-card">
+            <div class="instr-card-emoji">👟</div>
+            <div class="instr-card-name">Fila per il Drop</div>
+            <div class="instr-card-desc">Costa 200€ e stanca molto. Se le prendi: vibe +40, follower +30. Se sono esaurite: tutto negativo. Cooldown 3 giorni.</div>
+          </div>
+          <div class="instr-card">
+            <div class="instr-card-emoji">🎬</div>
+            <div class="instr-card-name">Netflix binge</div>
+            <div class="instr-card-desc">Recuperi energia e un po' di vibe, ma perdi studio. Nessun costo. Cooldown 1 giorno.</div>
+          </div>
+          <div class="instr-card">
+            <div class="instr-card-emoji">🛵</div>
+            <div class="instr-card-name">Lavora per Glovo</div>
+            <div class="instr-card-desc">Guadagni tra 40€ e 80€ ma la vibe scende. Utile quando sei al verde. Cooldown 2 giorni.</div>
+          </div>
+          <div class="instr-card">
+            <div class="instr-card-emoji">🛍️</div>
+            <div class="instr-card-name">Shop Vinted</div>
+            <div class="instr-card-desc">Rivendi le vecchie Nike come "vintage". Guadagni soldi e un po' di follower. Cooldown 2 giorni.</div>
+          </div>
+          <div class="instr-card">
+            <div class="instr-card-emoji">📚</div>
+            <div class="instr-card-name">Studia (davvero)</div>
+            <div class="instr-card-desc">Aumenta lo studio ma la vibe soffre. Nessun costo. Cooldown 1 giorno.</div>
+          </div>
+          <div class="instr-card">
+            <div class="instr-card-emoji">🍹</div>
+            <div class="instr-card-name">Aperitivo</div>
+            <div class="instr-card-desc">Costa 25€. Ottimo per vibe e follower. Rischio: dire una cosa imbarazzante. Cooldown 1 giorno.</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- SCORE -->
+      <div class="instr-section">
+        <div class="instr-label">🏆 Punteggio finale</div>
+        <p class="instr-text">
+          Il tuo score si calcola su tutti e 5 i valori finali. Puoi ottenere uno di questi 4 rank:
+          <strong style="color:#FFD700"> Leggenda del Feed</strong> (80+) ·
+          <strong style="color:#FF6B6B"> Influencer in Ascesa</strong> (60+) ·
+          <strong style="color:#A855F7"> Content Creator Medio</strong> (40+) ·
+          <strong style="color:#888"> Ghostato dall'Algoritmo</strong> (sotto 40).
+          Puoi condividere il tuo risultato come immagine direttamente sui social.
+        </p>
+        <div class="instr-tip">
+          💡 <strong>Strategia consigliata:</strong> nei primi giorni accumula soldi con Glovo e Vinted, poi investi in drop e aperitivi per far esplodere follower e vibe. Tieni sempre l'energia sopra 20 per non perdere.
+        </div>
+      </div>
+
+    </div>
   </div>
 </div>
 
@@ -895,6 +1081,13 @@ document.getElementById("score-share-btn").addEventListener("click",async functi
     try{await navigator.clipboard.writeText(SHARE_URL);shareBadge.textContent="✅ Link copiato!";shareBtn.classList.add("copied");setTimeout(()=>{shareBadge.textContent="Apri nel browser";shareBtn.classList.remove("copied");},2400);}
     catch(e){prompt("Copia questo link:",SHARE_URL);}
   });
+
+  // modal istruzioni
+  const overlay=document.getElementById("modal-overlay");
+  document.getElementById("how-btn").addEventListener("click",()=>overlay.classList.add("open"));
+  document.getElementById("modal-close").addEventListener("click",()=>overlay.classList.remove("open"));
+  overlay.addEventListener("click",(e)=>{if(e.target===overlay)overlay.classList.remove("open");});
+  document.addEventListener("keydown",(e)=>{if(e.key==="Escape")overlay.classList.remove("open");});
 })();
 </script>
 </body>
