@@ -2,670 +2,444 @@
 <html lang="it">
 <head>
 <meta charset="UTF-8"/>
-<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover, maximum-scale=1.0, user-scalable=no"/>
-<title>Zoomer Simulator</title>
-
-<!-- PWA / iOS -->
-<meta name="apple-mobile-web-app-capable" content="yes"/>
-<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"/>
-<meta name="apple-mobile-web-app-title" content="ZoomerSim"/>
-<meta name="theme-color" content="#08080e"/>
-<meta name="mobile-web-app-capable" content="yes"/>
-
-<!-- Fonts -->
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Zoomer Simulator 2026</title>
 <link rel="preconnect" href="https://fonts.googleapis.com"/>
 <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Space+Mono:wght@400;700&family=Permanent+Marker&display=swap" rel="stylesheet"/>
-
 <style>
-/* ============================================================
-   BASE
-============================================================ */
-*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
-:root {
-  --bg:     #08080e;
-  --surf:   rgba(255,255,255,0.05);
-  --bord:   rgba(255,255,255,0.10);
-  --red:    #FF6B6B;
-  --yel:    #FFE66D;
-  --grn:    #6BCB77;
-  --pur:    #A855F7;
-  --cyn:    #4CC9F0;
-  --txt:    #ddd;
-  --mut:    #777;
-  --dim:    #444;
-  --safe-top: env(safe-area-inset-top, 0px);
-  --safe-bot: env(safe-area-inset-bottom, 0px);
+/* ============================================================ BASE */
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+:root{
+  --bg:#08080e; --surf:rgba(255,255,255,.05); --bord:rgba(255,255,255,.09);
+  --red:#FF6B6B; --yel:#FFE66D; --grn:#6BCB77; --pur:#A855F7; --cyn:#4CC9F0;
+  --txt:#ddd; --mut:#666; --dim:#444;
+  --col-l:280px; --col-r:260px;
 }
-html { height: 100%; background: var(--bg); }
-body {
-  height: 100%;
-  background: var(--bg);
-  color: var(--txt);
-  font-family: 'Space Mono', monospace;
-  overflow: hidden;
-  -webkit-font-smoothing: antialiased;
-}
-button { -webkit-appearance: none; font-family: inherit; }
+html,body{height:100%;background:var(--bg);color:var(--txt);font-family:'Space Mono',monospace;overflow:hidden;}
+button{font-family:inherit;cursor:pointer;}
+::-webkit-scrollbar{width:4px;height:4px;}
+::-webkit-scrollbar-thumb{background:#222;border-radius:4px;}
 
-/* ============================================================
-   SCREENS
-============================================================ */
-.screen { display: none; flex-direction: column; height: 100dvh; height: 100vh; }
-.screen.active { display: flex; }
+/* ============================================================ SCREENS */
+.screen{display:none;width:100%;height:100vh;}
+.screen.active{display:flex;}
 
-/* ============================================================
-   INTRO SCREEN
-============================================================ */
-#screen-intro {
-  align-items: center;
-  justify-content: flex-start;
-  padding-top: calc(var(--safe-top) + 40px);
-  padding-bottom: calc(var(--safe-bot) + 24px);
-  padding-left: 24px;
-  padding-right: 24px;
-  overflow-y: auto;
+/* ============================================================ INTRO */
+#screen-intro{
+  flex-direction:row;
   background:
-    radial-gradient(ellipse at 20% 30%, #1a0a2e 0%, transparent 55%),
-    radial-gradient(ellipse at 80% 70%, #0a1a2e 0%, transparent 55%),
+    radial-gradient(ellipse at 20% 50%,#1a0a2e 0%,transparent 50%),
+    radial-gradient(ellipse at 80% 20%,#0a1a2e 0%,transparent 50%),
     var(--bg);
 }
-.intro-eyebrow {
-  font-size: 10px; letter-spacing: 6px; color: var(--pur);
-  text-transform: uppercase; margin-bottom: 8px;
-  animation: fadeUp .5s ease both;
+.intro-left{
+  flex:1; display:flex; flex-direction:column;
+  align-items:center; justify-content:center;
+  padding:40px; border-right:1px solid var(--bord);
+  position:relative; overflow:hidden;
 }
-.intro-title {
-  font-family: 'Bebas Neue', cursive;
-  font-size: 72px; line-height: .9; text-align: center;
-  background: linear-gradient(135deg, var(--red), var(--pur), var(--cyn));
-  -webkit-background-clip: text; -webkit-text-fill-color: transparent;
-  animation: fadeUp .5s .08s ease both;
+.intro-left::before{
+  content:''; position:absolute; inset:0;
+  background:radial-gradient(ellipse at 50% 60%,rgba(168,85,247,.08) 0%,transparent 70%);
+  pointer-events:none;
 }
-.intro-sub {
-  font-family: 'Permanent Marker', cursive;
-  font-size: 13px; color: var(--dim); margin: 8px 0 28px;
-  animation: fadeUp .5s .15s ease both;
+.intro-eyebrow{font-size:11px;letter-spacing:7px;color:var(--pur);text-transform:uppercase;margin-bottom:12px;animation:fadeUp .5s ease both;}
+.intro-title{
+  font-family:'Bebas Neue',cursive; font-size:clamp(80px,9vw,130px); line-height:.88; text-align:center;
+  background:linear-gradient(135deg,var(--red),var(--pur),var(--cyn));
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;
+  animation:fadeUp .5s .08s ease both;
 }
-.intro-card {
-  background: var(--surf); border: 1px solid var(--bord);
-  border-radius: 20px; padding: 28px 24px; width: 100%;
-  animation: fadeUp .5s .2s ease both;
+.intro-designed{font-size:11px;color:#444;letter-spacing:3px;margin-top:10px;animation:fadeUp .5s .12s ease both;}
+.intro-sub{font-family:'Permanent Marker',cursive;font-size:15px;color:var(--dim);margin:12px 0 32px;animation:fadeUp .5s .15s ease both;}
+/* Gianluca on intro */
+.intro-char{width:220px;height:auto;filter:drop-shadow(0 8px 30px rgba(168,85,247,.3));animation:fadeUp .6s .2s ease both;}
+.intro-right{
+  width:420px; min-width:380px; display:flex; flex-direction:column;
+  align-items:center; justify-content:center; padding:40px 36px;
+  overflow-y:auto;
 }
-.field-label {
-  font-size: 9px; letter-spacing: 3px; color: var(--mut);
-  text-transform: uppercase; display: block; margin-bottom: 8px;
+.intro-card{
+  background:var(--surf);border:1px solid var(--bord);border-radius:20px;
+  padding:32px 28px;width:100%;animation:fadeUp .5s .2s ease both;
 }
-.text-input {
-  width: 100%; background: rgba(255,255,255,0.07);
-  border: 1px solid rgba(255,255,255,0.15); border-radius: 12px;
-  padding: 14px 16px; color: #fff; font-family: 'Space Mono', monospace;
-  font-size: 16px; /* prevents iOS zoom */ outline: none;
-  margin-bottom: 22px; -webkit-appearance: none;
-  transition: border-color .2s;
+.field-label{font-size:9px;letter-spacing:3px;color:var(--mut);text-transform:uppercase;display:block;margin-bottom:8px;}
+.text-input{
+  width:100%;background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.15);
+  border-radius:10px;padding:13px 14px;color:#fff;font-family:'Space Mono',monospace;
+  font-size:14px;outline:none;margin-bottom:20px;transition:border-color .2s;
 }
-.text-input:focus { border-color: var(--pur); }
-.avatar-grid { display: flex; flex-wrap: wrap; gap: 10px; margin-bottom: 26px; }
-.avatar-picker {
-  display: flex; align-items: center; gap: 10px;
-  margin-bottom: 12px;
-  width: 100%; overflow: hidden;
+.text-input:focus{border-color:var(--pur);}
+.avatar-picker{display:flex;align-items:center;gap:10px;margin-bottom:12px;width:100%;overflow:hidden;}
+.avatar-preview{
+  width:52px;height:52px;font-size:28px;background:rgba(168,85,247,.15);
+  border:2px solid var(--pur);border-radius:12px;
+  display:flex;align-items:center;justify-content:center;flex-shrink:0;
 }
-.avatar-preview {
-  width: 56px; height: 56px; font-size: 30px;
-  background: rgba(168,85,247,.15);
-  border: 2px solid var(--pur);
-  border-radius: 14px;
-  display: flex; align-items: center; justify-content: center;
-  flex-shrink: 0;
+.avatar-preview.bump{animation:bump .2s ease;}
+@keyframes bump{0%,100%{transform:scale(1);}50%{transform:scale(1.2);}}
+.avatar-input{
+  flex:1;min-width:0;width:0;background:rgba(255,255,255,.07);
+  border:1px solid rgba(255,255,255,.15);border-radius:10px;
+  padding:12px 10px;color:#fff;font-size:20px;outline:none;
+  text-align:center;transition:border-color .2s;overflow:hidden;
 }
-.avatar-preview.bump { animation: bump .2s ease; }
-@keyframes bump { 0%,100%{ transform:scale(1); } 50%{ transform:scale(1.2); } }
-.avatar-input {
-  flex: 1; min-width: 0; width: 0;
-  background: rgba(255,255,255,.07);
-  border: 1px solid rgba(255,255,255,.15); border-radius: 12px;
-  padding: 13px 10px; color: #fff;
-  font-size: 22px; outline: none;
-  -webkit-appearance: none; text-align: center;
-  transition: border-color .2s;
-  overflow: hidden;
+.avatar-input:focus{border-color:var(--pur);}
+.avatar-quick{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:22px;}
+.avatar-btn{
+  width:42px;height:42px;font-size:20px;border-radius:9px;
+  border:2px solid transparent;background:rgba(255,255,255,.06);transition:all .15s;
 }
-.avatar-input:focus { border-color: var(--pur); }
-.avatar-quick { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 22px; }
-.avatar-btn {
-  width: 44px; height: 44px; font-size: 22px;
-  border-radius: 10px; cursor: pointer;
-  border: 2px solid transparent;
-  background: rgba(255,255,255,.06);
-  transition: all .15s;
+.avatar-btn.selected{border-color:var(--pur);background:rgba(168,85,247,.2);transform:scale(1.08);}
+.start-btn{
+  width:100%;padding:16px;border-radius:12px;border:none;
+  background:linear-gradient(135deg,var(--pur),var(--red));
+  color:#fff;font-family:'Bebas Neue',cursive;font-size:22px;letter-spacing:3px;transition:all .2s;
 }
-.avatar-btn.selected {
-  border-color: var(--pur);
-  background: rgba(168,85,247,.22);
-  transform: scale(1.08);
+.start-btn:hover{transform:translateY(-2px);box-shadow:0 8px 30px rgba(168,85,247,.4);}
+.start-btn:disabled{background:rgba(255,255,255,.08);color:#444;transform:none;box-shadow:none;}
+.intro-footer-right{margin-top:20px;font-size:10px;color:#2a2a2a;text-align:center;line-height:1.8;}
+.footer-link{color:var(--pur);text-decoration:none;border-bottom:1px solid rgba(168,85,247,.3);}
+.footer-link:hover{color:#c084fc;}
+.share-btn-intro{
+  display:flex;align-items:center;justify-content:center;gap:8px;
+  width:100%;margin-top:12px;padding:13px;border-radius:12px;
+  border:1px solid rgba(255,255,255,.12);background:rgba(255,255,255,.04);
+  color:#ccc;font-family:'Space Mono',monospace;font-size:12px;font-weight:700;
+  transition:all .18s;letter-spacing:1px;
 }
-.start-btn {
-  width: 100%; padding: 18px; border-radius: 14px; border: none;
-  cursor: pointer;
-  background: linear-gradient(135deg, var(--pur), var(--red));
-  color: #fff; font-family: 'Bebas Neue', cursive;
-  font-size: 22px; letter-spacing: 3px; transition: all .2s;
-}
-.start-btn:active { transform: scale(.97); }
-.start-btn:disabled { background: rgba(255,255,255,.08); color: #444; }
-.intro-designed {
-  font-family: 'Space Mono', monospace;
-  font-size: 10px; color: #555; letter-spacing: 2px;
-  text-align: center; margin-top: 6px; margin-bottom: 0;
-  animation: fadeUp .5s .18s ease both;
-}
-.intro-footer { margin-top: 20px; font-size: 10px; color: #333; text-align: center; line-height: 1.7; }
-.footer-link { color: var(--pur); text-decoration: none; border-bottom: 1px solid rgba(168,85,247,.3); }
-.footer-link:active { color: #c084fc; }
+.share-btn-intro:hover{background:rgba(255,255,255,.09);}
+.share-badge{font-size:10px;color:var(--pur);background:rgba(168,85,247,.15);border-radius:5px;padding:2px 7px;}
+.share-btn-intro.copied{border-color:rgba(107,203,119,.4);background:rgba(107,203,119,.08);color:var(--grn);}
 
 /* SOCIAL BAR */
-.social-bar {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 12px;
-  margin-top: 14px;
-  padding-bottom: 8px;
-}
-.social-link {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 5px;
-  text-decoration: none;
-  opacity: .7;
-  transition: opacity .2s, transform .15s;
-}
-.social-link:active { opacity: 1; transform: scale(.93); }
-.social-icon { width: 36px; height: 36px; display: block; }
-.social-label {
-  font-size: 9px;
-  letter-spacing: 1px;
-  color: #555;
-  text-transform: uppercase;
-}
+.social-bar{display:flex;align-items:center;justify-content:center;gap:20px;margin-top:16px;padding-bottom:4px;}
+.social-link{display:flex;flex-direction:column;align-items:center;gap:5px;text-decoration:none;opacity:.65;transition:opacity .2s,transform .15s;}
+.social-link:hover{opacity:1;transform:translateY(-2px);}
+.social-icon{width:32px;height:32px;display:block;}
+.social-label{font-size:9px;letter-spacing:1px;color:#444;text-transform:uppercase;}
 
-/* install tip */
-.install-tip {
-  margin-top: 14px;
-  background: rgba(168,85,247,.1);
-  border: 1px solid rgba(168,85,247,.2);
-  border-radius: 10px;
-  padding: 10px 14px;
-  font-size: 11px;
-  color: #888;
-  text-align: center;
-  line-height: 1.5;
+/* ============================================================ GAME */
+#screen-game{
+  flex-direction:column;
+  background:radial-gradient(ellipse at 10% 10%,#130920 0%,transparent 40%),var(--bg);
 }
-.install-tip strong { color: var(--pur); }
+.g-header{
+  padding:12px 24px;border-bottom:1px solid var(--bord);
+  background:rgba(0,0,0,.55);backdrop-filter:blur(16px);
+  display:flex;align-items:center;justify-content:space-between;flex-shrink:0;z-index:10;
+}
+.g-logo{
+  font-family:'Bebas Neue',cursive;font-size:22px;letter-spacing:2px;
+  background:linear-gradient(135deg,var(--red),var(--pur));
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;
+}
+.g-meta{display:flex;gap:16px;font-size:12px;color:var(--mut);align-items:center;}
+.m-day{color:var(--pur);}
+.m-act{font-weight:700;}
+.m-act.ok{color:var(--grn);}
+.m-act.empty{color:var(--red);}
 
-/* ============================================================
-   GAME SCREEN — mobile layout:
-   [header] [character strip] [stats row] [actions scroll] [footer-bar]
-============================================================ */
-#screen-game {
-  background:
-    radial-gradient(ellipse at 10% 10%, #130920 0%, transparent 40%),
-    var(--bg);
-}
+/* 3-column layout */
+.g-body{display:flex;flex:1;overflow:hidden;height:calc(100vh - 49px);}
 
-/* HEADER */
-.g-header {
-  padding: calc(var(--safe-top) + 10px) 16px 10px;
-  border-bottom: 1px solid var(--bord);
-  background: rgba(0,0,0,.6);
-  backdrop-filter: blur(16px);
-  -webkit-backdrop-filter: blur(16px);
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  flex-shrink: 0;
-  z-index: 10;
+/* LEFT: Gianluca + stats */
+.g-left{
+  width:var(--col-l);min-width:var(--col-l);
+  display:flex;flex-direction:column;
+  border-right:1px solid var(--bord);
+  background:rgba(0,0,0,.25);
+  overflow-y:auto;
 }
-.g-logo {
-  font-family: 'Bebas Neue', cursive; font-size: 20px; letter-spacing: 2px;
-  background: linear-gradient(135deg, var(--red), var(--pur));
-  -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+.char-box{
+  display:flex;flex-direction:column;align-items:center;
+  padding:16px 12px 10px;border-bottom:1px solid var(--bord);
 }
-.g-meta { display: flex; gap: 10px; font-size: 11px; color: var(--mut); align-items: center; }
-.m-day { color: var(--pur); }
-.m-act { font-weight: 700; }
-.m-act.ok { color: var(--grn); }
-.m-act.empty { color: var(--red); }
+.char-svg{
+  width:160px;height:auto;display:block;
+  filter:drop-shadow(0 4px 20px rgba(168,85,247,.3));
+  transition:filter .4s;
+}
+.char-svg.vibe-high{animation:pulse-glow 2s infinite;}
+.char-svg.vibe-low{filter:drop-shadow(0 4px 16px rgba(255,107,107,.3));opacity:.85;}
+.char-svg.shake{animation:shake .35s ease;}
+.char-bubble{
+  font-size:11px;font-style:italic;color:#777;
+  text-align:center;padding:6px 8px;line-height:1.4;
+  background:rgba(255,255,255,.03);border:1px solid var(--bord);
+  border-radius:8px;margin-top:8px;width:100%;
+}
+.stats-box{padding:16px 14px;flex:1;}
+.panel-title{font-size:9px;letter-spacing:3px;color:#333;text-transform:uppercase;margin-bottom:12px;}
+.stat-row2{margin-bottom:12px;}
+.stat-hdr{display:flex;justify-content:space-between;margin-bottom:5px;}
+.stat-name{font-size:12px;color:#aaa;}
+.stat-val{font-size:12px;font-weight:700;}
+.stat-track{height:6px;background:rgba(255,255,255,.07);border-radius:3px;overflow:hidden;}
+.stat-fill{height:100%;border-radius:3px;transition:width .4s ease;}
+.vibe-box2{margin-top:14px;padding:10px 12px;background:rgba(255,255,255,.03);border-radius:9px;font-size:13px;}
+.sleep-btn{
+  margin:14px;padding:12px;border-radius:10px;
+  border:1px solid rgba(76,201,240,.25);background:rgba(76,201,240,.08);
+  color:var(--cyn);font-family:'Space Mono',monospace;font-size:12px;
+  transition:all .2s;width:calc(100% - 28px);
+}
+.sleep-btn:hover{background:rgba(76,201,240,.18);}
+/* social compact in left panel */
+.g-social{
+  display:flex;justify-content:center;gap:12px;
+  padding:10px 0 14px;border-top:1px solid var(--bord);
+}
+.g-social .social-icon{width:22px;height:22px;}
+.g-social .social-label{display:none;}
+.g-social .social-link{opacity:.5;}
+.g-social .social-link:hover{opacity:1;}
 
-/* CHARACTER + STATS strip (horizontal on mobile) */
-.g-top-strip {
-  display: flex;
-  align-items: stretch;
-  border-bottom: 1px solid var(--bord);
-  flex-shrink: 0;
-  background: rgba(0,0,0,.2);
+/* CENTER: Actions */
+.g-center{flex:1;display:flex;flex-direction:column;overflow:hidden;}
+.g-actions-title{padding:14px 16px 10px;font-size:9px;letter-spacing:3px;color:#333;text-transform:uppercase;flex-shrink:0;}
+.g-actions{flex:1;overflow-y:auto;padding:0 16px 16px;}
+.actions-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:10px;}
+.action-card{
+  padding:14px 12px;border-radius:12px;
+  border:1px solid rgba(255,255,255,.09);background:rgba(255,255,255,.04);
+  color:var(--txt);cursor:pointer;text-align:left;transition:all .15s;
+  font-family:'Space Mono',monospace;
 }
+.action-card:hover:not(.locked){background:rgba(255,255,255,.09);transform:translateY(-2px);border-color:rgba(255,255,255,.18);}
+.action-card.locked{border-color:rgba(255,255,255,.04);background:rgba(255,255,255,.02);color:#444;cursor:not-allowed;opacity:.7;}
+.ac-emoji{font-size:22px;display:block;margin-bottom:6px;}
+.ac-name{font-size:12px;font-weight:700;margin-bottom:3px;color:#eee;line-height:1.2;}
+.action-card.locked .ac-name{color:#333;}
+.ac-desc{font-size:10px;color:#555;line-height:1.4;margin-bottom:5px;}
+.ac-tag{font-size:9px;display:block;margin-top:2px;}
+.tag-cost{color:var(--grn);}.tag-cd{color:var(--red);}.tag-misc{color:var(--red);}
 
-/* Character column */
-.char-col {
-  width: 110px;
-  min-width: 110px;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: flex-end;
-  padding: 6px 6px 0;
-  border-right: 1px solid var(--bord);
-  position: relative;
-  overflow: hidden;
+/* RIGHT: Log */
+.g-right{
+  width:var(--col-r);min-width:var(--col-r);
+  display:flex;flex-direction:column;
+  border-left:1px solid var(--bord);background:rgba(0,0,0,.25);overflow:hidden;
 }
-.char-svg {
-  width: 100px;
-  height: auto;
-  display: block;
-  transition: filter .4s;
-  filter: drop-shadow(0 2px 12px rgba(168,85,247,.3));
+.log-header{padding:14px 14px 8px;font-size:9px;letter-spacing:3px;color:#333;text-transform:uppercase;flex-shrink:0;}
+.log-list{flex:1;overflow-y:auto;padding:0 12px 12px;}
+.log-entry{
+  padding:8px 10px;border-radius:7px;margin-bottom:5px;
+  font-size:11px;background:rgba(255,255,255,.02);color:#bbb;line-height:1.5;
+  border-left:2px solid #333;animation:fadeIn .3s ease;
 }
-.char-svg.vibe-high { animation: pulse-glow 2s infinite; }
-.char-svg.vibe-low  { filter: drop-shadow(0 2px 12px rgba(255,107,107,.3)); opacity: .85; }
-.char-svg.shake     { animation: shake .35s ease; }
-.char-bubble {
-  font-size: 9px; font-style: italic; color: #888;
-  text-align: center; padding: 4px 4px 6px;
-  line-height: 1.3;
-}
+.log-entry.good{border-left-color:var(--grn);}
+.log-entry.bad{border-left-color:var(--red);}
+.log-entry.event{border-left-color:var(--yel);}
+.log-day{color:#333;font-size:10px;}
 
-/* Stats column */
-.stats-col {
-  flex: 1;
-  padding: 10px 12px;
-  display: flex;
-  flex-direction: column;
-  gap: 5px;
-  justify-content: center;
-  overflow: hidden;
+/* ============================================================ NOTIFICATION */
+#notif{
+  position:fixed;top:16px;left:50%;transform:translateX(-50%) translateY(-20px);
+  padding:10px 22px;border-radius:100px;font-weight:700;font-size:12px;
+  z-index:200;pointer-events:none;opacity:0;transition:all .3s ease;
+  white-space:nowrap;max-width:88vw;font-family:'Space Mono',monospace;
 }
-.stat-row { display: flex; align-items: center; gap: 6px; }
-.stat-icon { font-size: 12px; width: 16px; text-align: center; flex-shrink: 0; }
-.stat-track { flex: 1; height: 5px; background: rgba(255,255,255,.07); border-radius: 3px; overflow: hidden; }
-.stat-fill  { height: 100%; border-radius: 3px; transition: width .4s ease; }
-.stat-val   { font-size: 10px; font-weight: 700; width: 28px; text-align: right; flex-shrink: 0; }
+#notif.show{opacity:1;transform:translateX(-50%) translateY(0);}
 
-/* ACTIONS scroll area */
-.g-actions {
-  flex: 1;
-  overflow-y: auto;
-  padding: 12px;
-  -webkit-overflow-scrolling: touch;
+/* ============================================================ END SCREEN */
+#screen-end{
+  flex-direction:row;
+  background:radial-gradient(ellipse at 40% 50%,#1a0a2e 0%,transparent 70%),var(--bg);
 }
-.actions-grid {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 8px;
+.end-left{
+  flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;
+  padding:40px;border-right:1px solid var(--bord);
 }
-.action-card {
-  padding: 12px 10px;
-  border-radius: 14px;
-  border: 1px solid rgba(255,255,255,.09);
-  background: rgba(255,255,255,.04);
-  color: var(--txt);
-  cursor: pointer;
-  text-align: left;
-  transition: all .12s;
-  font-family: 'Space Mono', monospace;
-  -webkit-appearance: none;
-  min-height: 90px;
+.end-char-svg{width:200px;height:auto;animation:bounceIn .5s ease;filter:drop-shadow(0 8px 30px rgba(168,85,247,.3));}
+.end-rank{font-family:'Bebas Neue',cursive;font-size:clamp(28px,4vw,52px);margin:16px 0 4px;text-align:center;animation:fadeUp .4s ease;}
+.end-meta{font-size:13px;color:var(--mut);margin-bottom:0;}
+.end-right{
+  width:440px;min-width:380px;display:flex;flex-direction:column;
+  align-items:center;justify-content:center;padding:40px 36px;overflow-y:auto;
 }
-.action-card:active:not(.locked) { transform: scale(.96); background: rgba(255,255,255,.09); }
-.action-card.locked {
-  border-color: rgba(255,255,255,.04);
-  background: rgba(255,255,255,.02);
-  color: #444; opacity: .7;
+.end-card{
+  background:var(--surf);border:1px solid var(--bord);border-radius:18px;
+  padding:24px;width:100%;max-width:380px;margin-bottom:20px;
 }
-.ac-emoji { font-size: 20px; display: block; margin-bottom: 4px; }
-.ac-name  { font-size: 11px; font-weight: 700; margin-bottom: 2px; color: #eee; line-height: 1.2; }
-.action-card.locked .ac-name { color: #333; }
-.ac-desc  { font-size: 9px; color: #555; line-height: 1.3; margin-bottom: 4px; }
-.ac-tag   { font-size: 9px; display: block; margin-top: 1px; }
-.tag-cost { color: var(--grn); }
-.tag-cd   { color: var(--red); }
-.tag-misc { color: var(--red); }
+.end-score-label{font-size:9px;letter-spacing:3px;color:var(--mut);text-transform:uppercase;}
+.end-score{font-family:'Bebas Neue',cursive;font-size:90px;line-height:1;margin-bottom:14px;}
+.end-stat-row{display:flex;justify-content:space-between;padding:5px 0;border-bottom:1px solid rgba(255,255,255,.05);font-size:13px;}
+.end-stat-row:last-child{border:none;}
+.end-stat-lbl{color:var(--mut);}
+.end-btns{display:flex;gap:12px;width:100%;max-width:380px;margin-bottom:16px;}
+.restart-btn{
+  flex:1;padding:15px;border-radius:12px;border:none;
+  background:linear-gradient(135deg,var(--pur),var(--cyn));
+  color:#fff;font-family:'Bebas Neue',cursive;font-size:20px;letter-spacing:3px;transition:all .2s;
+}
+.restart-btn:hover{transform:translateY(-2px);box-shadow:0 8px 30px rgba(168,85,247,.4);}
+.score-share-btn{
+  flex:1;display:flex;align-items:center;justify-content:center;gap:8px;
+  padding:15px;border-radius:12px;border:1px solid rgba(255,107,107,.3);
+  background:rgba(255,107,107,.08);color:var(--red);
+  font-family:'Space Mono',monospace;font-size:12px;font-weight:700;
+  transition:all .18s;letter-spacing:1px;
+}
+.score-share-btn:hover{background:rgba(255,107,107,.16);}
+.score-share-btn.loading{opacity:.6;pointer-events:none;}
+.score-share-btn.done{border-color:rgba(107,203,119,.4);background:rgba(107,203,119,.08);color:var(--grn);}
+.end-footer{font-size:10px;color:#2a2a2a;text-align:center;line-height:1.8;}
 
-/* FOOTER NAV BAR */
-.g-footer {
-  padding: 6px 12px;
-  padding-bottom: calc(var(--safe-bot) + 6px);
-  border-top: 1px solid var(--bord);
-  background: rgba(0,0,0,.6);
-  backdrop-filter: blur(16px);
-  -webkit-backdrop-filter: blur(16px);
-  display: flex;
-  flex-direction: column;
-  gap: 6px;
-  flex-shrink: 0;
-  z-index: 10;
-}
-.g-footer-top {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-}
-.footer-sleep {
-  flex: 1;
-  padding: 11px;
-  border-radius: 12px;
-  border: 1px solid rgba(76,201,240,.25);
-  background: rgba(76,201,240,.1);
-  color: var(--cyn);
-  font-family: 'Space Mono', monospace;
-  font-size: 12px;
-  font-weight: 700;
-  cursor: pointer;
-  transition: all .2s;
-}
-.footer-sleep:active { background: rgba(76,201,240,.2); transform: scale(.97); }
-.footer-log-btn {
-  width: 44px; height: 44px;
-  border-radius: 12px;
-  border: 1px solid var(--bord);
-  background: var(--surf);
-  color: var(--mut);
-  font-size: 18px;
-  cursor: pointer;
-  flex-shrink: 0;
-  transition: all .15s;
-}
-.footer-log-btn:active { background: rgba(255,255,255,.1); }
-/* compact social bar inside game footer — icone senza label, più piccole */
-.social-bar--compact {
-  margin-top: 0;
-  padding-bottom: 0;
-  gap: 16px;
-}
-.social-bar--compact .social-icon { width: 22px; height: 22px; }
-.social-bar--compact .social-label { display: none; }
-
-/* ============================================================
-   LOG DRAWER (slide up from bottom)
-============================================================ */
-.log-drawer {
-  position: fixed;
-  bottom: 0; left: 0; right: 0;
-  height: 55vh;
-  background: #0f0f18;
-  border-top: 1px solid var(--bord);
-  border-radius: 20px 20px 0 0;
-  z-index: 100;
-  transform: translateY(100%);
-  transition: transform .35s cubic-bezier(.4,0,.2,1);
-  display: flex;
-  flex-direction: column;
-  padding-bottom: calc(var(--safe-bot) + 8px);
-}
-.log-drawer.open { transform: translateY(0); }
-.log-handle {
-  width: 36px; height: 4px;
-  background: rgba(255,255,255,.2); border-radius: 2px;
-  margin: 10px auto 0;
-  flex-shrink: 0;
-}
-.log-title {
-  font-size: 9px; letter-spacing: 3px; color: var(--dim);
-  text-transform: uppercase; padding: 8px 16px;
-  flex-shrink: 0;
-}
-.log-list {
-  flex: 1; overflow-y: auto; padding: 0 14px;
-  -webkit-overflow-scrolling: touch;
-}
-.log-entry {
-  padding: 7px 10px; border-radius: 7px; margin-bottom: 5px;
-  font-size: 11px; background: rgba(255,255,255,.02);
-  color: #bbb; line-height: 1.5;
-  border-left: 2px solid #333;
-}
-.log-entry.good  { border-left-color: var(--grn); }
-.log-entry.bad   { border-left-color: var(--red); }
-.log-entry.event { border-left-color: var(--yel); }
-.log-day { color: #333; font-size: 10px; }
-.log-overlay {
-  position: fixed; inset: 0; background: rgba(0,0,0,.5);
-  z-index: 99; display: none;
-}
-.log-overlay.active { display: block; }
-
-/* ============================================================
-   NOTIFICATION TOAST
-============================================================ */
-#notif {
-  position: fixed;
-  top: calc(var(--safe-top) + 60px);
-  left: 50%; transform: translateX(-50%) translateY(-16px);
-  padding: 10px 20px; border-radius: 100px;
-  font-weight: 700; font-size: 12px; z-index: 200;
-  pointer-events: none; opacity: 0;
-  transition: all .3s ease;
-  white-space: nowrap; max-width: 88vw;
-  font-family: 'Space Mono', monospace;
-  text-align: center;
-}
-#notif.show { opacity: 1; transform: translateX(-50%) translateY(0); }
-
-/* ============================================================
-   END SCREEN
-============================================================ */
-#screen-end {
-  align-items: center;
-  justify-content: center;
-  padding: calc(var(--safe-top) + 20px) 24px calc(var(--safe-bot) + 20px);
-  overflow-y: auto;
-  text-align: center;
-  background: radial-gradient(ellipse at center, #1a0a2e 0%, transparent 70%), var(--bg);
-}
-.end-char-wrap { margin-bottom: 12px; }
-.end-char-svg  { width: 120px; height: auto; animation: bounceIn .5s ease; }
-.end-rank {
-  font-family: 'Bebas Neue', cursive;
-  font-size: clamp(24px, 7vw, 42px);
-  margin-bottom: 4px; animation: fadeUp .4s ease;
-}
-.end-meta { font-size: 12px; color: var(--mut); margin-bottom: 24px; }
-.end-card {
-  background: var(--surf); border: 1px solid var(--bord);
-  border-radius: 18px; padding: 20px; width: 100%;
-  max-width: 360px; margin-bottom: 20px;
-}
-.end-score-label { font-size: 9px; letter-spacing: 3px; color: var(--mut); text-transform: uppercase; }
-.end-score { font-family: 'Bebas Neue', cursive; font-size: 80px; line-height: 1; margin-bottom: 14px; }
-.end-stat-row {
-  display: flex; justify-content: space-between;
-  padding: 5px 0; border-bottom: 1px solid rgba(255,255,255,.05); font-size: 13px;
-}
-.end-stat-row:last-child { border: none; }
-.end-stat-lbl { color: var(--mut); }
-.restart-btn {
-  padding: 16px 44px; border-radius: 14px; border: none; cursor: pointer;
-  background: linear-gradient(135deg, var(--pur), var(--cyn));
-  color: #fff; font-family: 'Bebas Neue', cursive;
-  font-size: 20px; letter-spacing: 3px; transition: all .2s;
-}
-.restart-btn:active { transform: scale(.97); }
-.score-share-btn {
-  display: flex; align-items: center; justify-content: center;
-  gap: 10px;
-  width: 100%; max-width: 360px;
-  margin-top: 12px;
-  padding: 15px;
-  border-radius: 14px;
-  border: 1px solid rgba(255,107,107,.3);
-  background: rgba(255,107,107,.08);
-  color: var(--red);
-  font-family: 'Space Mono', monospace;
-  font-size: 13px; font-weight: 700;
-  cursor: pointer; transition: all .18s;
-  letter-spacing: 1px;
-}
-.score-share-btn:active { transform: scale(.97); background: rgba(255,107,107,.16); }
-.score-share-btn.loading { opacity: .6; pointer-events: none; }
-.score-share-btn.done {
-  border-color: rgba(107,203,119,.4);
-  background: rgba(107,203,119,.08);
-  color: var(--grn);
-}
-
-/* ============================================================
-   SHARE BUTTON
-============================================================ */
-.share-btn {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 10px;
-  width: 100%;
-  margin-top: 14px;
-  padding: 15px;
-  border-radius: 14px;
-  border: 1px solid rgba(255,255,255,0.13);
-  background: rgba(255,255,255,0.05);
-  color: #ccc;
-  font-family: 'Space Mono', monospace;
-  font-size: 13px;
-  font-weight: 700;
-  cursor: pointer;
-  transition: all .18s;
-  letter-spacing: 1px;
-}
-.share-btn:active { transform: scale(.97); background: rgba(255,255,255,.1); }
-.share-btn .share-icon { font-size: 18px; }
-.share-btn .share-text { flex: 1; text-align: left; }
-.share-btn .share-badge {
-  font-size: 10px; color: var(--pur);
-  background: rgba(168,85,247,.15);
-  border-radius: 6px; padding: 3px 8px;
-  letter-spacing: 0; white-space: nowrap;
-}
-.share-btn.copied { border-color: rgba(107,203,119,.4); background: rgba(107,203,119,.08); color: var(--grn); }
-
-/* ============================================================
-   ANIMATIONS
-============================================================ */
-@keyframes fadeUp {
-  from { opacity: 0; transform: translateY(14px); }
-  to   { opacity: 1; transform: translateY(0); }
-}
-@keyframes bounceIn {
-  0%  { transform: scale(.5); opacity: 0; }
-  70% { transform: scale(1.08); }
-  100%{ transform: scale(1); opacity: 1; }
-}
-@keyframes pulse-glow {
-  0%,100% { filter: drop-shadow(0 2px 14px rgba(255,214,0,.45)); }
-  50%     { filter: drop-shadow(0 2px 24px rgba(255,214,0,.75)); }
-}
-@keyframes shake {
-  0%,100% { transform: rotate(0deg); }
-  25%     { transform: rotate(-4deg) translateX(-2px); }
-  75%     { transform: rotate(4deg) translateX(2px); }
-}
-@keyframes fadeIn { from { opacity:0; } to { opacity:1; } }
-
-/* scrollbar */
-::-webkit-scrollbar { width: 3px; }
-::-webkit-scrollbar-thumb { background: #222; border-radius: 3px; }
+/* ============================================================ ANIMATIONS */
+@keyframes fadeUp{from{opacity:0;transform:translateY(14px);}to{opacity:1;transform:translateY(0);}}
+@keyframes fadeIn{from{opacity:0;}to{opacity:1;}}
+@keyframes bounceIn{0%{transform:scale(.5);opacity:0;}70%{transform:scale(1.08);}100%{transform:scale(1);opacity:1;}}
+@keyframes pulse-glow{0%,100%{filter:drop-shadow(0 4px 22px rgba(255,214,0,.45));}50%{filter:drop-shadow(0 4px 32px rgba(255,214,0,.75));}}
+@keyframes shake{0%,100%{transform:rotate(0);}25%{transform:rotate(-4deg) translateX(-2px);}75%{transform:rotate(4deg) translateX(2px);}}
 </style>
 </head>
 <body>
 
-<!-- NOTIFICA -->
 <div id="notif"></div>
 
-<!-- LOG OVERLAY + DRAWER -->
-<div class="log-overlay" id="log-overlay"></div>
-<div class="log-drawer" id="log-drawer">
-  <div class="log-handle"></div>
-  <div class="log-title">📋 Log eventi</div>
-  <div class="log-list" id="log-list"></div>
-</div>
-
-<!-- ===================== INTRO ===================== -->
+<!-- ==================== INTRO ==================== -->
 <div id="screen-intro" class="screen active">
-  <p class="intro-eyebrow">Obscured Truckware 2026</p>
-  <h1 class="intro-title">ZOOMER<br/>SIMULATOR</h1>
-  <p class="intro-designed">Designed by Paolo Asnaghi</p>
-  <p class="intro-sub">"diventa l'icona che meriti"</p>
 
-  <div class="intro-card">
-    <label class="field-label" for="player-name">Il tuo nome</label>
-    <input class="text-input" id="player-name" maxlength="16"
-      placeholder="es. Kevin, Giada, Luca..." autocomplete="off"/>
-    <label class="field-label">Il tuo avatar</label>
-    <div class="avatar-picker">
-      <div class="avatar-preview" id="avatar-preview">😎</div>
-      <input class="avatar-input" id="avatar-input" type="text" maxlength="2"
-        placeholder="✏️ scrivi emoji" autocomplete="off" autocorrect="off"
-        spellcheck="false" inputmode="text"/>
+  <!-- LEFT: branding + Gianluca -->
+  <div class="intro-left">
+    <p class="intro-eyebrow">Obscured Truckware 2026</p>
+    <h1 class="intro-title">ZOOMER<br/>SIMULATOR</h1>
+    <p class="intro-designed">Designed by Paolo Asnaghi</p>
+    <p class="intro-sub">"diventa l'icona che meriti"</p>
+
+    <!-- Gianluca SVG -->
+    <svg class="intro-char" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 240 340">
+      <defs>
+        <linearGradient id="sg0" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" style="stop-color:#FBBF8A"/><stop offset="100%" style="stop-color:#F59E5A"/></linearGradient>
+        <linearGradient id="tg0" x1="0%" y1="0%" x2="0%" y2="100%"><stop offset="0%" style="stop-color:#38BDF8"/><stop offset="100%" style="stop-color:#0EA5E9"/></linearGradient>
+        <linearGradient id="stg0" x1="0%" y1="0%" x2="0%" y2="100%"><stop offset="0%" style="stop-color:#1E1B4B"/><stop offset="100%" style="stop-color:#312E81"/></linearGradient>
+        <linearGradient id="shg0" x1="0%" y1="0%" x2="0%" y2="100%"><stop offset="0%" style="stop-color:#FF6B6B"/><stop offset="100%" style="stop-color:#E53E3E"/></linearGradient>
+        <linearGradient id="hg0" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" style="stop-color:#2D1B0E"/><stop offset="100%" style="stop-color:#1A0F07"/></linearGradient>
+      </defs>
+      <rect x="88" y="248" width="24" height="68" rx="12" fill="url(#sg0)"/>
+      <rect x="126" y="248" width="24" height="68" rx="12" fill="url(#sg0)"/>
+      <rect x="76" y="288" width="44" height="18" rx="9" fill="url(#shg0)"/>
+      <rect x="78" y="290" width="28" height="7" rx="3" fill="#fff" opacity=".2"/>
+      <rect x="80" y="299" width="36" height="4" rx="2" fill="#C53030"/>
+      <rect x="82" y="292" width="5" height="2" rx="1" fill="#fff" opacity=".4"/>
+      <rect x="91" y="292" width="5" height="2" rx="1" fill="#fff" opacity=".4"/>
+      <rect x="100" y="292" width="5" height="2" rx="1" fill="#fff" opacity=".4"/>
+      <rect x="118" y="288" width="44" height="18" rx="9" fill="url(#shg0)"/>
+      <rect x="120" y="290" width="28" height="7" rx="3" fill="#fff" opacity=".2"/>
+      <rect x="122" y="299" width="36" height="4" rx="2" fill="#C53030"/>
+      <rect x="124" y="292" width="5" height="2" rx="1" fill="#fff" opacity=".4"/>
+      <rect x="133" y="292" width="5" height="2" rx="1" fill="#fff" opacity=".4"/>
+      <rect x="142" y="292" width="5" height="2" rx="1" fill="#fff" opacity=".4"/>
+      <rect x="78" y="200" width="84" height="42" rx="16" fill="url(#stg0)"/>
+      <rect x="118" y="202" width="3" height="38" rx="2" fill="#000" opacity=".2"/>
+      <rect x="86" y="210" width="28" height="14" rx="4" fill="#A855F7" opacity=".8"/>
+      <text x="100" y="221" font-family="'Arial Black',Arial" font-size="7" fill="#fff" font-weight="900" text-anchor="middle">GYMX</text>
+      <path d="M70 138 C60 150 58 190 62 242 L178 242 C182 190 180 150 170 138 Z" fill="url(#sg0)"/>
+      <path d="M80 126 L68 144 L62 242 L178 242 L172 144 L160 126 Z" fill="url(#tg0)"/>
+      <path d="M95 126 L120 154 L145 126" fill="none" stroke="#0284C7" stroke-width="3" stroke-linecap="round"/>
+      <path d="M68 144 C64 137 70 126 80 126" fill="#F59E5A"/>
+      <path d="M172 144 C176 137 170 126 160 126" fill="#F59E5A"/>
+      <text x="120" y="186" font-family="'Arial Black',Arial" font-size="10" fill="rgba(0,0,0,.5)" font-weight="900" text-anchor="middle">NO PAIN</text>
+      <text x="120" y="200" font-family="'Arial Black',Arial" font-size="10" fill="rgba(0,0,0,.5)" font-weight="900" text-anchor="middle">NO GAIN</text>
+      <ellipse cx="104" cy="168" rx="18" ry="12" fill="#fff" opacity=".07"/>
+      <ellipse cx="136" cy="168" rx="18" ry="12" fill="#fff" opacity=".07"/>
+      <path d="M70 138 C44 140 30 154 28 172 C26 192 36 206 50 208 C64 210 72 196 74 180 Z" fill="url(#sg0)"/>
+      <path d="M28 172 C18 186 22 212 34 220 C46 228 58 218 62 204 C50 201 36 194 28 172 Z" fill="url(#sg0)"/>
+      <rect x="16" y="206" width="20" height="38" rx="7" fill="#FFE66D"/>
+      <rect x="18" y="202" width="16" height="9" rx="4" fill="#F59E0B"/>
+      <text x="26" y="227" font-family="Arial" font-size="6" fill="#92400E" font-weight="bold" text-anchor="middle">PROT</text>
+      <text x="26" y="235" font-family="Arial" font-size="6" fill="#92400E" font-weight="bold" text-anchor="middle">EIN</text>
+      <path d="M170 138 C196 140 210 154 212 172 C214 192 204 206 190 208 C176 210 168 196 166 180 Z" fill="url(#sg0)"/>
+      <path d="M212 172 C222 186 218 212 206 220 C194 228 182 218 178 204 C190 201 204 194 212 172 Z" fill="url(#sg0)"/>
+      <rect x="196" y="204" width="22" height="36" rx="5" fill="#111827"/>
+      <rect x="198" y="207" width="18" height="27" rx="3" fill="#A855F7" opacity=".65"/>
+      <circle cx="207" cy="209" r="2.5" fill="#FFE66D" opacity=".9"/>
+      <rect x="106" y="110" width="28" height="24" rx="10" fill="url(#sg0)"/>
+      <ellipse cx="120" cy="84" rx="44" ry="46" fill="url(#sg0)"/>
+      <ellipse cx="120" cy="48" rx="42" ry="26" fill="url(#hg0)"/>
+      <rect x="78" y="48" width="84" height="20" fill="url(#hg0)"/>
+      <path d="M80 62 Q120 52 160 62" fill="url(#hg0)"/>
+      <path d="M76 74 C74 66 76 56 82 52 L82 74 Z" fill="url(#hg0)" opacity=".7"/>
+      <path d="M164 74 C166 66 164 56 158 52 L158 74 Z" fill="url(#hg0)" opacity=".7"/>
+      <ellipse cx="76" cy="86" rx="10" ry="12" fill="url(#sg0)"/>
+      <ellipse cx="78" cy="86" rx="6" ry="8" fill="#F59E5A"/>
+      <ellipse cx="164" cy="86" rx="10" ry="12" fill="url(#sg0)"/>
+      <ellipse cx="162" cy="86" rx="6" ry="8" fill="#F59E5A"/>
+      <rect x="63" y="81" width="8" height="12" rx="4" fill="#F0F0F0"/>
+      <rect x="65" y="93" width="4" height="8" rx="2" fill="#F0F0F0"/>
+      <rect x="168" y="81" width="8" height="12" rx="4" fill="#F0F0F0"/>
+      <rect x="170" y="93" width="4" height="8" rx="2" fill="#F0F0F0"/>
+      <path id="il-brow-l" d="M90 66 Q103 62 107 65" fill="none" stroke="#2D1B0E" stroke-width="5" stroke-linecap="round"/>
+      <path id="il-brow-r" d="M133 65 Q137 62 150 66" fill="none" stroke="#2D1B0E" stroke-width="5" stroke-linecap="round"/>
+      <ellipse cx="103" cy="80" rx="12" ry="11" fill="white"/>
+      <ellipse cx="137" cy="80" rx="12" ry="11" fill="white"/>
+      <circle cx="105" cy="81" r="7" fill="#3B1F0A"/>
+      <circle cx="139" cy="81" r="7" fill="#3B1F0A"/>
+      <circle cx="106" cy="82" r="3.5" fill="#0A0A0A"/>
+      <circle cx="140" cy="82" r="3.5" fill="#0A0A0A"/>
+      <circle cx="108" cy="79" r="2" fill="white"/>
+      <circle cx="142" cy="79" r="2" fill="white"/>
+      <path d="M116 88 C113 96 114 101 120 103 C126 101 127 96 124 88" fill="none" stroke="#E08C4A" stroke-width="2" stroke-linecap="round"/>
+      <ellipse cx="115" cy="102" rx="4" ry="3" fill="#E08C4A" opacity=".4"/>
+      <ellipse cx="125" cy="102" rx="4" ry="3" fill="#E08C4A" opacity=".4"/>
+      <path d="M108 112 Q120 120 132 112" fill="none" stroke="#2D1B0E" stroke-width="3" stroke-linecap="round"/>
+      <path d="M111 114 Q120 120 129 114" fill="white" opacity=".5"/>
+      <ellipse cx="120" cy="114" rx="26" ry="9" fill="#8B5E3C" opacity=".14"/>
+      <rect x="84" y="56" width="72" height="13" rx="5" fill="#111" opacity=".85"/>
+      <rect x="86" y="54" width="28" height="13" rx="5" fill="#1a1a1a"/>
+      <rect x="86" y="54" width="28" height="13" rx="5" fill="#38BDF8" opacity=".2"/>
+      <rect x="126" y="54" width="28" height="13" rx="5" fill="#1a1a1a"/>
+      <rect x="126" y="54" width="28" height="13" rx="5" fill="#38BDF8" opacity=".2"/>
+      <rect x="114" y="58" width="12" height="5" rx="2" fill="#222"/>
+    </svg>
+
+    <!-- social -->
+    <div class="social-bar" style="margin-top:28px;">
+      <a class="social-link" href="https://www.instagram.com/beyond_the_platforms?igsh=MWpuNmdlcXYxODdoNw==" target="_blank" rel="noopener">
+        <svg class="social-icon" viewBox="0 0 24 24" fill="none"><defs><linearGradient id="iga" x1="0" y1="24" x2="24" y2="0" gradientUnits="userSpaceOnUse"><stop offset="0%" stop-color="#f09433"/><stop offset="25%" stop-color="#e6683c"/><stop offset="50%" stop-color="#dc2743"/><stop offset="75%" stop-color="#cc2366"/><stop offset="100%" stop-color="#bc1888"/></linearGradient></defs>
+        <rect x="2" y="2" width="20" height="20" rx="6" stroke="url(#iga)" stroke-width="2"/><circle cx="12" cy="12" r="4.5" stroke="url(#iga)" stroke-width="2"/><circle cx="17.5" cy="6.5" r="1.2" fill="url(#iga)"/></svg>
+        <span class="social-label">Instagram</span>
+      </a>
+      <a class="social-link" href="https://youtube.com/@beyondtheplatforms?si=6oJ4aefVFTay5nmw" target="_blank" rel="noopener">
+        <svg class="social-icon" viewBox="0 0 24 24" fill="none"><rect x="2" y="5" width="20" height="14" rx="4" fill="#FF0000"/><polygon points="10,9 10,15 16,12" fill="white"/></svg>
+        <span class="social-label">YouTube</span>
+      </a>
+      <a class="social-link" href="https://www.linkedin.com/in/paoloasnaghi?utm_source=share&utm_campaign=share_via&utm_content=profile&utm_medium=ios_app" target="_blank" rel="noopener">
+        <svg class="social-icon" viewBox="0 0 24 24" fill="none"><rect x="2" y="2" width="20" height="20" rx="4" fill="#0A66C2"/><rect x="6" y="10" width="2.5" height="8" fill="white"/><circle cx="7.25" cy="7.25" r="1.5" fill="white"/><path d="M11 10h2.5v1.1c.4-.7 1.3-1.3 2.5-1.3 2.2 0 3 1.5 3 3.4V18H16.5v-4.4c0-1-.4-1.7-1.4-1.7-1 0-1.6.7-1.6 1.7V18H11V10z" fill="white"/></svg>
+        <span class="social-label">LinkedIn</span>
+      </a>
     </div>
-    <div class="avatar-quick" id="avatar-grid"></div>
-    <button class="start-btn" id="start-btn" disabled>INIZIA LA VITA 🚀</button>
   </div>
 
-  <button class="share-btn" id="share-btn">
-    <span class="share-icon">🔗</span>
-    <span class="share-text">Condividi il gioco</span>
-    <span class="share-badge" id="share-badge">Apri nel browser</span>
-  </button>
+  <!-- RIGHT: form -->
+  <div class="intro-right">
+    <div class="intro-card">
+      <label class="field-label" for="player-name">Il tuo nome</label>
+      <input class="text-input" id="player-name" maxlength="16" placeholder="es. Kevin, Giada, Luca..." autocomplete="off"/>
+      <label class="field-label">Il tuo avatar</label>
+      <div class="avatar-picker">
+        <div class="avatar-preview" id="avatar-preview">😎</div>
+        <input class="avatar-input" id="avatar-input" type="text" maxlength="2" placeholder="✏️ emoji" autocomplete="off" autocorrect="off" spellcheck="false"/>
+      </div>
+      <div class="avatar-quick" id="avatar-grid"></div>
+      <button class="start-btn" id="start-btn" disabled>INIZIA LA VITA 🚀</button>
+    </div>
 
-  <p class="intro-footer">© Beyond The Platforms · <a href="https://www.beyondtheplatforms.com" target="_blank" rel="noopener" class="footer-link">beyondtheplatforms.com</a></p>
+    <button class="share-btn-intro" id="share-btn">
+      <span>🔗</span>
+      <span>Condividi il gioco</span>
+      <span class="share-badge" id="share-badge">Apri nel browser</span>
+    </button>
 
-  <div class="social-bar">
-    <!-- Instagram -->
-    <a class="social-link" href="https://www.instagram.com/beyond_the_platforms?igsh=MWpuNmdlcXYxODdoNw==" target="_blank" rel="noopener" aria-label="Instagram">
-      <svg class="social-icon" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-        <defs>
-          <linearGradient id="ig-grad" x1="0" y1="24" x2="24" y2="0" gradientUnits="userSpaceOnUse">
-            <stop offset="0%" stop-color="#f09433"/>
-            <stop offset="25%" stop-color="#e6683c"/>
-            <stop offset="50%" stop-color="#dc2743"/>
-            <stop offset="75%" stop-color="#cc2366"/>
-            <stop offset="100%" stop-color="#bc1888"/>
-          </linearGradient>
-        </defs>
-        <rect x="2" y="2" width="20" height="20" rx="6" stroke="url(#ig-grad)" stroke-width="2"/>
-        <circle cx="12" cy="12" r="4.5" stroke="url(#ig-grad)" stroke-width="2"/>
-        <circle cx="17.5" cy="6.5" r="1.2" fill="url(#ig-grad)"/>
-      </svg>
-      <span class="social-label">Instagram</span>
-    </a>
-
-    <!-- YouTube -->
-    <a class="social-link" href="https://youtube.com/@beyondtheplatforms?si=6oJ4aefVFTay5nmw" target="_blank" rel="noopener" aria-label="YouTube">
-      <svg class="social-icon" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-        <rect x="2" y="5" width="20" height="14" rx="4" fill="#FF0000"/>
-        <polygon points="10,9 10,15 16,12" fill="white"/>
-      </svg>
-      <span class="social-label">YouTube</span>
-    </a>
-
-    <!-- LinkedIn -->
-    <a class="social-link" href="https://www.linkedin.com/in/paoloasnaghi?utm_source=share&utm_campaign=share_via&utm_content=profile&utm_medium=ios_app" target="_blank" rel="noopener" aria-label="LinkedIn">
-      <svg class="social-icon" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-        <rect x="2" y="2" width="20" height="20" rx="4" fill="#0A66C2"/>
-        <rect x="6" y="10" width="2.5" height="8" fill="white"/>
-        <circle cx="7.25" cy="7.25" r="1.5" fill="white"/>
-        <path d="M11 10h2.5v1.1c.4-.7 1.3-1.3 2.5-1.3 2.2 0 3 1.5 3 3.4V18H16.5v-4.4c0-1-.4-1.7-1.4-1.7-1 0-1.6.7-1.6 1.7V18H11V10z" fill="white"/>
-      </svg>
-      <span class="social-label">LinkedIn</span>
-    </a>
+    <p class="intro-footer-right">© Beyond The Platforms · <a href="https://www.beyondtheplatforms.com" target="_blank" rel="noopener" class="footer-link">beyondtheplatforms.com</a></p>
   </div>
 </div>
 
-<!-- ===================== GAME ===================== -->
+<!-- ==================== GAME ==================== -->
 <div id="screen-game" class="screen">
-
-  <!-- Header -->
   <div class="g-header">
-    <span class="g-logo">ZOOMER SIM</span>
+    <span class="g-logo">ZOOMER SIMULATOR 2026</span>
     <div class="g-meta">
       <span id="m-player"></span>
       <span class="m-day" id="m-day">📅 1/30</span>
@@ -673,192 +447,143 @@ button { -webkit-appearance: none; font-family: inherit; }
     </div>
   </div>
 
-  <!-- Top strip: Gianluca + Stats -->
-  <div class="g-top-strip">
+  <div class="g-body">
+    <!-- LEFT: char + stats -->
+    <div class="g-left">
+      <div class="char-box">
+        <svg id="g-svg" class="char-svg" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 240 340">
+          <defs>
+            <linearGradient id="sg" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" style="stop-color:#FBBF8A"/><stop offset="100%" style="stop-color:#F59E5A"/></linearGradient>
+            <linearGradient id="tg" x1="0%" y1="0%" x2="0%" y2="100%"><stop offset="0%" style="stop-color:#38BDF8"/><stop offset="100%" style="stop-color:#0EA5E9"/></linearGradient>
+            <linearGradient id="stg" x1="0%" y1="0%" x2="0%" y2="100%"><stop offset="0%" style="stop-color:#1E1B4B"/><stop offset="100%" style="stop-color:#312E81"/></linearGradient>
+            <linearGradient id="shg" x1="0%" y1="0%" x2="0%" y2="100%"><stop offset="0%" style="stop-color:#FF6B6B"/><stop offset="100%" style="stop-color:#E53E3E"/></linearGradient>
+            <linearGradient id="hg" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" style="stop-color:#2D1B0E"/><stop offset="100%" style="stop-color:#1A0F07"/></linearGradient>
+          </defs>
+          <rect x="88" y="248" width="24" height="68" rx="12" fill="url(#sg)"/>
+          <rect x="126" y="248" width="24" height="68" rx="12" fill="url(#sg)"/>
+          <rect x="76" y="288" width="44" height="18" rx="9" fill="url(#shg)"/>
+          <rect x="78" y="290" width="28" height="7" rx="3" fill="#fff" opacity=".2"/>
+          <rect x="80" y="299" width="36" height="4" rx="2" fill="#C53030"/>
+          <rect x="82" y="292" width="5" height="2" rx="1" fill="#fff" opacity=".4"/>
+          <rect x="91" y="292" width="5" height="2" rx="1" fill="#fff" opacity=".4"/>
+          <rect x="100" y="292" width="5" height="2" rx="1" fill="#fff" opacity=".4"/>
+          <rect x="118" y="288" width="44" height="18" rx="9" fill="url(#shg)"/>
+          <rect x="120" y="290" width="28" height="7" rx="3" fill="#fff" opacity=".2"/>
+          <rect x="122" y="299" width="36" height="4" rx="2" fill="#C53030"/>
+          <rect x="124" y="292" width="5" height="2" rx="1" fill="#fff" opacity=".4"/>
+          <rect x="133" y="292" width="5" height="2" rx="1" fill="#fff" opacity=".4"/>
+          <rect x="142" y="292" width="5" height="2" rx="1" fill="#fff" opacity=".4"/>
+          <rect x="78" y="200" width="84" height="42" rx="16" fill="url(#stg)"/>
+          <rect x="118" y="202" width="3" height="38" rx="2" fill="#000" opacity=".2"/>
+          <rect x="86" y="210" width="28" height="14" rx="4" fill="#A855F7" opacity=".8"/>
+          <text x="100" y="221" font-family="'Arial Black',Arial" font-size="7" fill="#fff" font-weight="900" text-anchor="middle">GYMX</text>
+          <path d="M70 138 C60 150 58 190 62 242 L178 242 C182 190 180 150 170 138 Z" fill="url(#sg)"/>
+          <path d="M80 126 L68 144 L62 242 L178 242 L172 144 L160 126 Z" fill="url(#tg)"/>
+          <path d="M95 126 L120 154 L145 126" fill="none" stroke="#0284C7" stroke-width="3" stroke-linecap="round"/>
+          <path d="M68 144 C64 137 70 126 80 126" fill="#F59E5A"/>
+          <path d="M172 144 C176 137 170 126 160 126" fill="#F59E5A"/>
+          <text x="120" y="186" font-family="'Arial Black',Arial" font-size="10" fill="rgba(0,0,0,.5)" font-weight="900" text-anchor="middle">NO PAIN</text>
+          <text x="120" y="200" font-family="'Arial Black',Arial" font-size="10" fill="rgba(0,0,0,.5)" font-weight="900" text-anchor="middle">NO GAIN</text>
+          <path d="M70 138 C44 140 30 154 28 172 C26 192 36 206 50 208 C64 210 72 196 74 180 Z" fill="url(#sg)"/>
+          <path d="M28 172 C18 186 22 212 34 220 C46 228 58 218 62 204 C50 201 36 194 28 172 Z" fill="url(#sg)"/>
+          <rect x="16" y="206" width="20" height="38" rx="7" fill="#FFE66D"/>
+          <rect x="18" y="202" width="16" height="9" rx="4" fill="#F59E0B"/>
+          <text x="26" y="227" font-family="Arial" font-size="6" fill="#92400E" font-weight="bold" text-anchor="middle">PROT</text>
+          <text x="26" y="235" font-family="Arial" font-size="6" fill="#92400E" font-weight="bold" text-anchor="middle">EIN</text>
+          <path d="M170 138 C196 140 210 154 212 172 C214 192 204 206 190 208 C176 210 168 196 166 180 Z" fill="url(#sg)"/>
+          <path d="M212 172 C222 186 218 212 206 220 C194 228 182 218 178 204 C190 201 204 194 212 172 Z" fill="url(#sg)"/>
+          <rect x="196" y="204" width="22" height="36" rx="5" fill="#111827"/>
+          <rect x="198" y="207" width="18" height="27" rx="3" fill="#A855F7" opacity=".65"/>
+          <circle cx="207" cy="209" r="2.5" fill="#FFE66D" opacity=".9"/>
+          <rect x="106" y="110" width="28" height="24" rx="10" fill="url(#sg)"/>
+          <ellipse cx="120" cy="84" rx="44" ry="46" fill="url(#sg)"/>
+          <ellipse cx="120" cy="48" rx="42" ry="26" fill="url(#hg)"/>
+          <rect x="78" y="48" width="84" height="20" fill="url(#hg)"/>
+          <path d="M80 62 Q120 52 160 62" fill="url(#hg)"/>
+          <path d="M76 74 C74 66 76 56 82 52 L82 74 Z" fill="url(#hg)" opacity=".7"/>
+          <path d="M164 74 C166 66 164 56 158 52 L158 74 Z" fill="url(#hg)" opacity=".7"/>
+          <ellipse cx="76" cy="86" rx="10" ry="12" fill="url(#sg)"/>
+          <ellipse cx="78" cy="86" rx="6" ry="8" fill="#F59E5A"/>
+          <ellipse cx="164" cy="86" rx="10" ry="12" fill="url(#sg)"/>
+          <ellipse cx="162" cy="86" rx="6" ry="8" fill="#F59E5A"/>
+          <rect x="63" y="81" width="8" height="12" rx="4" fill="#F0F0F0"/>
+          <rect x="65" y="93" width="4" height="8" rx="2" fill="#F0F0F0"/>
+          <rect x="168" y="81" width="8" height="12" rx="4" fill="#F0F0F0"/>
+          <rect x="170" y="93" width="4" height="8" rx="2" fill="#F0F0F0"/>
+          <path id="brow-l" d="M90 66 Q103 62 107 65" fill="none" stroke="#2D1B0E" stroke-width="5" stroke-linecap="round"/>
+          <path id="brow-r" d="M133 65 Q137 62 150 66" fill="none" stroke="#2D1B0E" stroke-width="5" stroke-linecap="round"/>
+          <ellipse cx="103" cy="80" rx="12" ry="11" fill="white"/>
+          <ellipse cx="137" cy="80" rx="12" ry="11" fill="white"/>
+          <circle cx="105" cy="81" r="7" fill="#3B1F0A"/>
+          <circle cx="139" cy="81" r="7" fill="#3B1F0A"/>
+          <circle cx="106" cy="82" r="3.5" fill="#0A0A0A"/>
+          <circle cx="140" cy="82" r="3.5" fill="#0A0A0A"/>
+          <circle cx="108" cy="79" r="2" fill="white"/>
+          <circle cx="142" cy="79" r="2" fill="white"/>
+          <path d="M116 88 C113 96 114 101 120 103 C126 101 127 96 124 88" fill="none" stroke="#E08C4A" stroke-width="2" stroke-linecap="round"/>
+          <ellipse cx="115" cy="102" rx="4" ry="3" fill="#E08C4A" opacity=".4"/>
+          <ellipse cx="125" cy="102" rx="4" ry="3" fill="#E08C4A" opacity=".4"/>
+          <path id="g-mouth" d="M108 112 Q120 120 132 112" fill="none" stroke="#2D1B0E" stroke-width="3" stroke-linecap="round"/>
+          <path d="M111 114 Q120 120 129 114" fill="white" opacity=".5"/>
+          <ellipse cx="120" cy="114" rx="26" ry="9" fill="#8B5E3C" opacity=".14"/>
+          <rect x="84" y="56" width="72" height="13" rx="5" fill="#111" opacity=".85"/>
+          <rect x="86" y="54" width="28" height="13" rx="5" fill="#1a1a1a"/>
+          <rect x="86" y="54" width="28" height="13" rx="5" fill="#38BDF8" opacity=".2"/>
+          <rect x="126" y="54" width="28" height="13" rx="5" fill="#1a1a1a"/>
+          <rect x="126" y="54" width="28" height="13" rx="5" fill="#38BDF8" opacity=".2"/>
+          <rect x="114" y="58" width="12" height="5" rx="2" fill="#222"/>
+        </svg>
+        <div class="char-bubble" id="g-bubble">"chest day 💪"</div>
+      </div>
 
-    <!-- Gianluca -->
-    <div class="char-col">
-      <svg id="g-svg" class="char-svg" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 240 340">
-        <defs>
-          <linearGradient id="sg" x1="0%" y1="0%" x2="100%" y2="100%">
-            <stop offset="0%" style="stop-color:#FBBF8A"/><stop offset="100%" style="stop-color:#F59E5A"/>
-          </linearGradient>
-          <linearGradient id="tg" x1="0%" y1="0%" x2="0%" y2="100%">
-            <stop offset="0%" style="stop-color:#38BDF8"/><stop offset="100%" style="stop-color:#0EA5E9"/>
-          </linearGradient>
-          <linearGradient id="stg" x1="0%" y1="0%" x2="0%" y2="100%">
-            <stop offset="0%" style="stop-color:#1E1B4B"/><stop offset="100%" style="stop-color:#312E81"/>
-          </linearGradient>
-          <linearGradient id="shg" x1="0%" y1="0%" x2="0%" y2="100%">
-            <stop offset="0%" style="stop-color:#FF6B6B"/><stop offset="100%" style="stop-color:#E53E3E"/>
-          </linearGradient>
-          <linearGradient id="hg" x1="0%" y1="0%" x2="100%" y2="100%">
-            <stop offset="0%" style="stop-color:#2D1B0E"/><stop offset="100%" style="stop-color:#1A0F07"/>
-          </linearGradient>
-        </defs>
-        <!-- LEGS -->
-        <rect x="88" y="232" width="24" height="68" rx="12" fill="url(#sg)"/>
-        <rect x="126" y="232" width="24" height="68" rx="12" fill="url(#sg)"/>
-        <!-- SHOES -->
-        <rect x="76" y="288" width="44" height="18" rx="9" fill="url(#shg)"/>
-        <rect x="78" y="290" width="28" height="7" rx="3" fill="#fff" opacity=".2"/>
-        <rect x="80" y="299" width="36" height="4" rx="2" fill="#C53030"/>
-        <rect x="82" y="292" width="5" height="2" rx="1" fill="#fff" opacity=".4"/>
-        <rect x="90" y="292" width="5" height="2" rx="1" fill="#fff" opacity=".4"/>
-        <rect x="98" y="292" width="5" height="2" rx="1" fill="#fff" opacity=".4"/>
-        <rect x="118" y="288" width="44" height="18" rx="9" fill="url(#shg)"/>
-        <rect x="120" y="290" width="28" height="7" rx="3" fill="#fff" opacity=".2"/>
-        <rect x="122" y="299" width="36" height="4" rx="2" fill="#C53030"/>
-        <rect x="124" y="292" width="5" height="2" rx="1" fill="#fff" opacity=".4"/>
-        <rect x="132" y="292" width="5" height="2" rx="1" fill="#fff" opacity=".4"/>
-        <rect x="140" y="292" width="5" height="2" rx="1" fill="#fff" opacity=".4"/>
-        <!-- SHORTS -->
-        <rect x="78" y="200" width="84" height="42" rx="16" fill="url(#stg)"/>
-        <rect x="118" y="202" width="3" height="38" rx="2" fill="#000" opacity=".2"/>
-        <rect x="86" y="210" width="28" height="14" rx="4" fill="#A855F7" opacity=".8"/>
-        <text x="100" y="221" font-family="'Arial Black',Arial" font-size="7" fill="#fff" font-weight="900" text-anchor="middle">GYMX</text>
-        <!-- TORSO -->
-        <path d="M70 138 C60 150 58 190 62 242 L178 242 C182 190 180 150 170 138 Z" fill="url(#sg)"/>
-        <!-- TANK TOP -->
-        <path d="M80 126 L68 144 L62 242 L178 242 L172 144 L160 126 Z" fill="url(#tg)"/>
-        <path d="M95 126 L120 154 L145 126" fill="none" stroke="#0284C7" stroke-width="3" stroke-linecap="round"/>
-        <path d="M68 144 C64 137 70 126 80 126" fill="#F59E5A"/>
-        <path d="M172 144 C176 137 170 126 160 126" fill="#F59E5A"/>
-        <text x="120" y="186" font-family="'Arial Black',Arial" font-size="10" fill="rgba(0,0,0,.5)" font-weight="900" text-anchor="middle">NO PAIN</text>
-        <text x="120" y="200" font-family="'Arial Black',Arial" font-size="10" fill="rgba(0,0,0,.5)" font-weight="900" text-anchor="middle">NO GAIN</text>
-        <!-- LEFT ARM + SHAKER -->
-        <path d="M70 138 C44 140 30 154 28 172 C26 192 36 206 50 208 C64 210 72 196 74 180 Z" fill="url(#sg)"/>
-        <path d="M28 172 C18 186 22 212 34 220 C46 228 58 218 62 204 C50 201 36 194 28 172 Z" fill="url(#sg)"/>
-        <rect x="16" y="206" width="20" height="38" rx="7" fill="#FFE66D"/>
-        <rect x="18" y="202" width="16" height="9" rx="4" fill="#F59E0B"/>
-        <text x="26" y="227" font-family="Arial" font-size="6" fill="#92400E" font-weight="bold" text-anchor="middle">PROT</text>
-        <text x="26" y="235" font-family="Arial" font-size="6" fill="#92400E" font-weight="bold" text-anchor="middle">EIN</text>
-        <!-- RIGHT ARM + PHONE -->
-        <path d="M170 138 C196 140 210 154 212 172 C214 192 204 206 190 208 C176 210 168 196 166 180 Z" fill="url(#sg)"/>
-        <path d="M212 172 C222 186 218 212 206 220 C194 228 182 218 178 204 C190 201 204 194 212 172 Z" fill="url(#sg)"/>
-        <rect x="196" y="204" width="22" height="36" rx="5" fill="#111827"/>
-        <rect x="198" y="207" width="18" height="27" rx="3" fill="#A855F7" opacity=".65"/>
-        <circle cx="207" cy="209" r="2.5" fill="#FFE66D" opacity=".9"/>
-        <!-- NECK -->
-        <rect x="106" y="110" width="28" height="24" rx="10" fill="url(#sg)"/>
-        <!-- HEAD -->
-        <ellipse cx="120" cy="84" rx="44" ry="46" fill="url(#sg)"/>
-        <!-- HAIR -->
-        <ellipse cx="120" cy="48" rx="42" ry="26" fill="url(#hg)"/>
-        <rect x="78" y="48" width="84" height="20" fill="url(#hg)"/>
-        <path d="M80 62 Q120 52 160 62" fill="url(#hg)"/>
-        <path d="M76 74 C74 66 76 56 82 52 L82 74 Z" fill="url(#hg)" opacity=".7"/>
-        <path d="M164 74 C166 66 164 56 158 52 L158 74 Z" fill="url(#hg)" opacity=".7"/>
-        <!-- EARS -->
-        <ellipse cx="76" cy="86" rx="10" ry="12" fill="url(#sg)"/>
-        <ellipse cx="78" cy="86" rx="6" ry="8" fill="#F59E5A"/>
-        <ellipse cx="164" cy="86" rx="10" ry="12" fill="url(#sg)"/>
-        <ellipse cx="162" cy="86" rx="6" ry="8" fill="#F59E5A"/>
-        <!-- AIRPODS -->
-        <rect x="63" y="81" width="8" height="12" rx="4" fill="#F0F0F0"/>
-        <rect x="65" y="93" width="4" height="8" rx="2" fill="#F0F0F0"/>
-        <rect x="168" y="81" width="8" height="12" rx="4" fill="#F0F0F0"/>
-        <rect x="170" y="93" width="4" height="8" rx="2" fill="#F0F0F0"/>
-        <!-- EYEBROWS -->
-        <path id="brow-l" d="M90 66 Q103 62 107 65" fill="none" stroke="#2D1B0E" stroke-width="5" stroke-linecap="round"/>
-        <path id="brow-r" d="M133 65 Q137 62 150 66" fill="none" stroke="#2D1B0E" stroke-width="5" stroke-linecap="round"/>
-        <!-- EYES -->
-        <ellipse cx="103" cy="80" rx="12" ry="11" fill="white"/>
-        <ellipse cx="137" cy="80" rx="12" ry="11" fill="white"/>
-        <circle cx="105" cy="81" r="7" fill="#3B1F0A"/>
-        <circle cx="139" cy="81" r="7" fill="#3B1F0A"/>
-        <circle cx="106" cy="82" r="3.5" fill="#0A0A0A"/>
-        <circle cx="140" cy="82" r="3.5" fill="#0A0A0A"/>
-        <circle cx="108" cy="79" r="2" fill="white"/>
-        <circle cx="142" cy="79" r="2" fill="white"/>
-        <!-- NOSE -->
-        <path d="M116 88 C113 96 114 101 120 103 C126 101 127 96 124 88" fill="none" stroke="#E08C4A" stroke-width="2" stroke-linecap="round"/>
-        <ellipse cx="115" cy="102" rx="4" ry="3" fill="#E08C4A" opacity=".4"/>
-        <ellipse cx="125" cy="102" rx="4" ry="3" fill="#E08C4A" opacity=".4"/>
-        <!-- MOUTH -->
-        <path id="g-mouth" d="M108 112 Q120 120 132 112" fill="none" stroke="#2D1B0E" stroke-width="3" stroke-linecap="round"/>
-        <path d="M111 114 Q120 120 129 114" fill="white" opacity=".5"/>
-        <!-- STUBBLE -->
-        <ellipse cx="120" cy="114" rx="26" ry="9" fill="#8B5E3C" opacity=".14"/>
-        <circle cx="109" cy="110" r="1.1" fill="#2D1B0E" opacity=".2"/>
-        <circle cx="114" cy="112" r="1.1" fill="#2D1B0E" opacity=".2"/>
-        <circle cx="119" cy="114" r="1.1" fill="#2D1B0E" opacity=".2"/>
-        <circle cx="124" cy="114" r="1.1" fill="#2D1B0E" opacity=".2"/>
-        <circle cx="129" cy="112" r="1.1" fill="#2D1B0E" opacity=".2"/>
-        <circle cx="134" cy="110" r="1.1" fill="#2D1B0E" opacity=".2"/>
-        <!-- SUNGLASSES on head -->
-        <rect x="84" y="56" width="72" height="13" rx="5" fill="#111" opacity=".85"/>
-        <rect x="86" y="54" width="28" height="13" rx="5" fill="#1a1a1a"/>
-        <rect x="86" y="54" width="28" height="13" rx="5" fill="#38BDF8" opacity=".2"/>
-        <rect x="88" y="56" width="18" height="4" rx="2" fill="#fff" opacity=".06"/>
-        <rect x="126" y="54" width="28" height="13" rx="5" fill="#1a1a1a"/>
-        <rect x="126" y="54" width="28" height="13" rx="5" fill="#38BDF8" opacity=".2"/>
-        <rect x="128" y="56" width="18" height="4" rx="2" fill="#fff" opacity=".06"/>
-        <rect x="114" y="58" width="12" height="5" rx="2" fill="#222"/>
-      </svg>
-      <div class="char-bubble" id="g-bubble">"chest day 💪"</div>
+      <div class="stats-box">
+        <div class="panel-title">Stats</div>
+        <div id="stats-container"></div>
+        <div class="vibe-box2">
+          <div class="panel-title" style="margin-bottom:4px">Vibe Check</div>
+          <div id="vibe-label">😐 Normale</div>
+        </div>
+        <button class="sleep-btn" id="sleep-btn">😴 Vai a letto — giorno successivo</button>
+      </div>
+
+      <div class="g-social">
+        <a class="social-link" href="https://www.instagram.com/beyond_the_platforms?igsh=MWpuNmdlcXYxODdoNw==" target="_blank" rel="noopener">
+          <svg class="social-icon" viewBox="0 0 24 24" fill="none"><defs><linearGradient id="igb" x1="0" y1="24" x2="24" y2="0" gradientUnits="userSpaceOnUse"><stop offset="0%" stop-color="#f09433"/><stop offset="25%" stop-color="#e6683c"/><stop offset="50%" stop-color="#dc2743"/><stop offset="75%" stop-color="#cc2366"/><stop offset="100%" stop-color="#bc1888"/></linearGradient></defs><rect x="2" y="2" width="20" height="20" rx="6" stroke="url(#igb)" stroke-width="2"/><circle cx="12" cy="12" r="4.5" stroke="url(#igb)" stroke-width="2"/><circle cx="17.5" cy="6.5" r="1.2" fill="url(#igb)"/></svg>
+        </a>
+        <a class="social-link" href="https://youtube.com/@beyondtheplatforms?si=6oJ4aefVFTay5nmw" target="_blank" rel="noopener">
+          <svg class="social-icon" viewBox="0 0 24 24" fill="none"><rect x="2" y="5" width="20" height="14" rx="4" fill="#FF0000"/><polygon points="10,9 10,15 16,12" fill="white"/></svg>
+        </a>
+        <a class="social-link" href="https://www.linkedin.com/in/paoloasnaghi?utm_source=share&utm_campaign=share_via&utm_content=profile&utm_medium=ios_app" target="_blank" rel="noopener">
+          <svg class="social-icon" viewBox="0 0 24 24" fill="none"><rect x="2" y="2" width="20" height="20" rx="4" fill="#0A66C2"/><rect x="6" y="10" width="2.5" height="8" fill="white"/><circle cx="7.25" cy="7.25" r="1.5" fill="white"/><path d="M11 10h2.5v1.1c.4-.7 1.3-1.3 2.5-1.3 2.2 0 3 1.5 3 3.4V18H16.5v-4.4c0-1-.4-1.7-1.4-1.7-1 0-1.6.7-1.6 1.7V18H11V10z" fill="white"/></svg>
+        </a>
+      </div>
     </div>
 
-    <!-- Stats -->
-    <div class="stats-col" id="stats-col"></div>
-
-  </div>
-
-  <!-- Actions -->
-  <div class="g-actions">
-    <div class="actions-grid" id="actions-grid"></div>
-  </div>
-
-  <!-- Footer bar -->
-  <div class="g-footer">
-    <div class="g-footer-top">
-      <button class="footer-sleep" id="sleep-btn">😴 Vai a letto — giorno successivo</button>
-      <button class="footer-log-btn" id="log-btn" title="Log">📋</button>
+    <!-- CENTER: actions -->
+    <div class="g-center">
+      <div class="g-actions-title">Cosa fai oggi?</div>
+      <div class="g-actions">
+        <div class="actions-grid" id="actions-grid"></div>
+      </div>
     </div>
-    <div class="social-bar social-bar--compact">
-      <a class="social-link" href="https://www.instagram.com/beyond_the_platforms?igsh=MWpuNmdlcXYxODdoNw==" target="_blank" rel="noopener" aria-label="Instagram">
-        <svg class="social-icon" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-          <defs><linearGradient id="ig3" x1="0" y1="24" x2="24" y2="0" gradientUnits="userSpaceOnUse"><stop offset="0%" stop-color="#f09433"/><stop offset="25%" stop-color="#e6683c"/><stop offset="50%" stop-color="#dc2743"/><stop offset="75%" stop-color="#cc2366"/><stop offset="100%" stop-color="#bc1888"/></linearGradient></defs>
-          <rect x="2" y="2" width="20" height="20" rx="6" stroke="url(#ig3)" stroke-width="2"/>
-          <circle cx="12" cy="12" r="4.5" stroke="url(#ig3)" stroke-width="2"/>
-          <circle cx="17.5" cy="6.5" r="1.2" fill="url(#ig3)"/>
-        </svg>
-      </a>
-      <a class="social-link" href="https://youtube.com/@beyondtheplatforms?si=6oJ4aefVFTay5nmw" target="_blank" rel="noopener" aria-label="YouTube">
-        <svg class="social-icon" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-          <rect x="2" y="5" width="20" height="14" rx="4" fill="#FF0000"/>
-          <polygon points="10,9 10,15 16,12" fill="white"/>
-        </svg>
-      </a>
-      <a class="social-link" href="https://www.linkedin.com/in/paoloasnaghi?utm_source=share&utm_campaign=share_via&utm_content=profile&utm_medium=ios_app" target="_blank" rel="noopener" aria-label="LinkedIn">
-        <svg class="social-icon" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-          <rect x="2" y="2" width="20" height="20" rx="4" fill="#0A66C2"/>
-          <rect x="6" y="10" width="2.5" height="8" fill="white"/>
-          <circle cx="7.25" cy="7.25" r="1.5" fill="white"/>
-          <path d="M11 10h2.5v1.1c.4-.7 1.3-1.3 2.5-1.3 2.2 0 3 1.5 3 3.4V18H16.5v-4.4c0-1-.4-1.7-1.4-1.7-1 0-1.6.7-1.6 1.7V18H11V10z" fill="white"/>
-        </svg>
-      </a>
+
+    <!-- RIGHT: log -->
+    <div class="g-right">
+      <div class="log-header">📋 Log eventi</div>
+      <div class="log-list" id="log-list"></div>
     </div>
   </div>
-
 </div>
 
-<!-- ===================== END ===================== -->
+<!-- ==================== END ==================== -->
 <div id="screen-end" class="screen">
-  <div class="end-char-wrap">
+  <div class="end-left">
     <svg class="end-char-svg" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 240 200">
       <defs>
-        <linearGradient id="esg" x1="0%" y1="0%" x2="100%" y2="100%">
-          <stop offset="0%" style="stop-color:#FBBF8A"/><stop offset="100%" style="stop-color:#F59E5A"/>
-        </linearGradient>
-        <linearGradient id="ehg" x1="0%" y1="0%" x2="100%" y2="100%">
-          <stop offset="0%" style="stop-color:#2D1B0E"/><stop offset="100%" style="stop-color:#1A0F07"/>
-        </linearGradient>
-        <linearGradient id="etg" x1="0%" y1="0%" x2="0%" y2="100%">
-          <stop offset="0%" style="stop-color:#38BDF8"/><stop offset="100%" style="stop-color:#0EA5E9"/>
-        </linearGradient>
+        <linearGradient id="esg" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" style="stop-color:#FBBF8A"/><stop offset="100%" style="stop-color:#F59E5A"/></linearGradient>
+        <linearGradient id="ehg" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" style="stop-color:#2D1B0E"/><stop offset="100%" style="stop-color:#1A0F07"/></linearGradient>
+        <linearGradient id="etg" x1="0%" y1="0%" x2="0%" y2="100%"><stop offset="0%" style="stop-color:#38BDF8"/><stop offset="100%" style="stop-color:#0EA5E9"/></linearGradient>
       </defs>
-      <!-- bust only: torso + head -->
       <path d="M80 110 C60 118 50 145 52 190 L188 190 C190 145 180 118 160 110 Z" fill="url(#esg)"/>
       <path d="M88 102 L76 116 L52 190 L188 190 L164 116 L152 102 Z" fill="url(#etg)"/>
       <text x="120" y="152" font-family="'Arial Black',Arial" font-size="9" fill="rgba(0,0,0,.5)" font-weight="900" text-anchor="middle">NO PAIN NO GAIN</text>
@@ -893,660 +618,284 @@ button { -webkit-appearance: none; font-family: inherit; }
       <rect x="128" y="40" width="28" height="12" rx="5" fill="#38BDF8" opacity=".18"/>
       <rect x="112" y="43" width="16" height="5" rx="2" fill="#333"/>
     </svg>
+    <div class="end-rank" id="end-rank">LEGGENDA DEL FEED 🏆</div>
+    <div class="end-meta" id="end-meta">Giorno 30 · Paolo</div>
+
+    <div class="social-bar" style="margin-top:24px;">
+      <a class="social-link" href="https://www.instagram.com/beyond_the_platforms?igsh=MWpuNmdlcXYxODdoNw==" target="_blank" rel="noopener">
+        <svg class="social-icon" viewBox="0 0 24 24" fill="none"><defs><linearGradient id="igc" x1="0" y1="24" x2="24" y2="0" gradientUnits="userSpaceOnUse"><stop offset="0%" stop-color="#f09433"/><stop offset="25%" stop-color="#e6683c"/><stop offset="50%" stop-color="#dc2743"/><stop offset="75%" stop-color="#cc2366"/><stop offset="100%" stop-color="#bc1888"/></linearGradient></defs><rect x="2" y="2" width="20" height="20" rx="6" stroke="url(#igc)" stroke-width="2"/><circle cx="12" cy="12" r="4.5" stroke="url(#igc)" stroke-width="2"/><circle cx="17.5" cy="6.5" r="1.2" fill="url(#igc)"/></svg>
+        <span class="social-label">Instagram</span>
+      </a>
+      <a class="social-link" href="https://youtube.com/@beyondtheplatforms?si=6oJ4aefVFTay5nmw" target="_blank" rel="noopener">
+        <svg class="social-icon" viewBox="0 0 24 24" fill="none"><rect x="2" y="5" width="20" height="14" rx="4" fill="#FF0000"/><polygon points="10,9 10,15 16,12" fill="white"/></svg>
+        <span class="social-label">YouTube</span>
+      </a>
+      <a class="social-link" href="https://www.linkedin.com/in/paoloasnaghi?utm_source=share&utm_campaign=share_via&utm_content=profile&utm_medium=ios_app" target="_blank" rel="noopener">
+        <svg class="social-icon" viewBox="0 0 24 24" fill="none"><rect x="2" y="2" width="20" height="20" rx="4" fill="#0A66C2"/><rect x="6" y="10" width="2.5" height="8" fill="white"/><circle cx="7.25" cy="7.25" r="1.5" fill="white"/><path d="M11 10h2.5v1.1c.4-.7 1.3-1.3 2.5-1.3 2.2 0 3 1.5 3 3.4V18H16.5v-4.4c0-1-.4-1.7-1.4-1.7-1 0-1.6.7-1.6 1.7V18H11V10z" fill="white"/></svg>
+        <span class="social-label">LinkedIn</span>
+      </a>
+    </div>
   </div>
-  <div class="end-rank" id="end-rank">LEGGENDA DEL FEED 🏆</div>
-  <div class="end-meta" id="end-meta">Giorno 30 · Paolo</div>
-  <div class="end-card">
-    <div class="end-score-label">Score Finale</div>
-    <div class="end-score" id="end-score">42</div>
-    <div id="end-stats"></div>
-  </div>
-  <button class="restart-btn" id="restart-btn">RICOMINCIA 🔄</button>
 
-  <button class="score-share-btn" id="score-share-btn">
-    <span>📤</span>
-    <span>Condividi il tuo punteggio</span>
-  </button>
-
-  <!-- Canvas nascosto per generare l'immagine da condividere -->
-  <canvas id="share-canvas" style="display:none"></canvas>
-
-  <div class="social-bar">
-    <a class="social-link" href="https://www.instagram.com/beyond_the_platforms?igsh=MWpuNmdlcXYxODdoNw==" target="_blank" rel="noopener" aria-label="Instagram">
-      <svg class="social-icon" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-        <defs><linearGradient id="ig2" x1="0" y1="24" x2="24" y2="0" gradientUnits="userSpaceOnUse"><stop offset="0%" stop-color="#f09433"/><stop offset="25%" stop-color="#e6683c"/><stop offset="50%" stop-color="#dc2743"/><stop offset="75%" stop-color="#cc2366"/><stop offset="100%" stop-color="#bc1888"/></linearGradient></defs>
-        <rect x="2" y="2" width="20" height="20" rx="6" stroke="url(#ig2)" stroke-width="2"/>
-        <circle cx="12" cy="12" r="4.5" stroke="url(#ig2)" stroke-width="2"/>
-        <circle cx="17.5" cy="6.5" r="1.2" fill="url(#ig2)"/>
-      </svg>
-      <span class="social-label">Instagram</span>
-    </a>
-    <a class="social-link" href="https://youtube.com/@beyondtheplatforms?si=6oJ4aefVFTay5nmw" target="_blank" rel="noopener" aria-label="YouTube">
-      <svg class="social-icon" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-        <rect x="2" y="5" width="20" height="14" rx="4" fill="#FF0000"/>
-        <polygon points="10,9 10,15 16,12" fill="white"/>
-      </svg>
-      <span class="social-label">YouTube</span>
-    </a>
-    <a class="social-link" href="https://www.linkedin.com/in/paoloasnaghi?utm_source=share&utm_campaign=share_via&utm_content=profile&utm_medium=ios_app" target="_blank" rel="noopener" aria-label="LinkedIn">
-      <svg class="social-icon" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-        <rect x="2" y="2" width="20" height="20" rx="4" fill="#0A66C2"/>
-        <rect x="6" y="10" width="2.5" height="8" fill="white"/>
-        <circle cx="7.25" cy="7.25" r="1.5" fill="white"/>
-        <path d="M11 10h2.5v1.1c.4-.7 1.3-1.3 2.5-1.3 2.2 0 3 1.5 3 3.4V18H16.5v-4.4c0-1-.4-1.7-1.4-1.7-1 0-1.6.7-1.6 1.7V18H11V10z" fill="white"/>
-      </svg>
-      <span class="social-label">LinkedIn</span>
-    </a>
+  <div class="end-right">
+    <div class="end-card">
+      <div class="end-score-label">Score Finale</div>
+      <div class="end-score" id="end-score">42</div>
+      <div id="end-stats"></div>
+    </div>
+    <div class="end-btns">
+      <button class="restart-btn" id="restart-btn">RICOMINCIA 🔄</button>
+      <button class="score-share-btn" id="score-share-btn"><span>📤</span><span>Condividi</span></button>
+    </div>
+    <canvas id="share-canvas" style="display:none"></canvas>
+    <p class="end-footer">© Beyond The Platforms · <a href="https://www.beyondtheplatforms.com" target="_blank" rel="noopener" class="footer-link">beyondtheplatforms.com</a></p>
   </div>
 </div>
 
 <script>
-// ============================================================
-// DATI
-// ============================================================
-const AVATARS = ["😎","🤙","👻","🦋","🐺","👾","🤡","🦊"];
-const STAT_CFG = {
-  follower: { label:"Follower", icon:"👥", color:"#FF6B6B", max:500 },
-  energia:  { label:"Energia",  icon:"⚡", color:"#FFE66D", max:100 },
-  soldi:    { label:"Soldi €",  icon:"💶", color:"#6BCB77", max:500 },
-  vibe:     { label:"Vibe",     icon:"✨", color:"#A855F7", max:100 },
-  studio:   { label:"Studio",   icon:"📚", color:"#4CC9F0", max:100 },
+// ============================================================ DATI
+const AVATARS=["😎","🤙","👻","🦋","🐺","👾","🤡","🦊"];
+const STAT_CFG={
+  follower:{label:"Follower",icon:"👥",color:"#FF6B6B",max:500},
+  energia: {label:"Energia", icon:"⚡",color:"#FFE66D",max:100},
+  soldi:   {label:"Soldi €", icon:"💶",color:"#6BCB77",max:500},
+  vibe:    {label:"Vibe",    icon:"✨",color:"#A855F7",max:100},
+  studio:  {label:"Studio",  icon:"📚",color:"#4CC9F0",max:100},
 };
-const ACTIONS = [
-  { id:"reel",      emoji:"📱", name:"Posta Reel",     desc:"Ballo imbarazzante → follower", cost:0,   cd:2,
-    fx:{ follower:[5,25], energia:[-15,-25], soldi:[0,0], vibe:[-5,10], studio:[0,0] },
-    ev:[
-      { p:.15, msg:"🔥 VIRALE! +50 follower!", bonus:{follower:50} },
-      { p:.10, msg:"💀 Mamma ha commentato ❤️. Cringe.", bonus:{vibe:-10} },
-    ]},
-  { id:"palestra",  emoji:"💪", name:"Palestra",       desc:"Chest day, sempre e comunque", cost:10, cd:1,
-    fx:{ follower:[0,3], energia:[-20,-30], soldi:[-10,-10], vibe:[5,15], studio:[0,0] },
-    ev:[
-      { p:.20, msg:"🏆 \"Sei un influencer fitness?\"", bonus:{follower:15,vibe:10} },
-      { p:.10, msg:"😬 Polso rotto facendo selfie.", bonus:{energia:-10} },
-    ]},
-  { id:"drop",      emoji:"👟", name:"Fila Drop",      desc:"4 ore per le Supreme x LV", cost:200, cd:3,
-    fx:{ follower:[10,30], energia:[-30,-40], soldi:[-200,-200], vibe:[20,40], studio:[-10,-20] },
-    ev:[
-      { p:.30, msg:"🎉 Le hai prese! Ora vali il doppio.", bonus:{vibe:20,follower:20} },
-      { p:.40, msg:"😭 Esaurite. 4 ore per niente.", bonus:{vibe:-15,energia:-10} },
-    ]},
-  { id:"netflix",   emoji:"🎬", name:"Netflix binge",  desc:"Solo una puntata, promesso", cost:0, cd:1,
-    fx:{ follower:[0,0], energia:[10,20], soldi:[0,0], vibe:[0,5], studio:[-5,-15] },
-    ev:[
-      { p:.20, msg:"📺 Serie finita in una notte. Leggenda.", bonus:{vibe:5} },
-    ]},
-  { id:"glovo",     emoji:"🛵", name:"Glovo",          desc:"Dignità -100, conto +60", cost:0, cd:2,
-    fx:{ follower:[-2,2], energia:[-20,-30], soldi:[40,80], vibe:[-10,-5], studio:[0,0] },
-    ev:[
-      { p:.15, msg:"💸 Tripla consegna! Guadagno doppio.", bonus:{soldi:50} },
-      { p:.10, msg:"☔ Pioggia. Crollo psicologico.", bonus:{vibe:-10,energia:-10} },
-    ]},
-  { id:"vinted",    emoji:"🛍️", name:"Shop Vinted",    desc:"Vecchie Nike → 'vintage'", cost:0, cd:2,
-    fx:{ follower:[2,8], energia:[-5,-10], soldi:[20,60], vibe:[0,10], studio:[0,0] },
-    ev:[
-      { p:.20, msg:"💰 Offerta folle per le Adidas!", bonus:{soldi:80} },
-      { p:.10, msg:"⭐ Recensione: 'puzzava di umido'.", bonus:{vibe:-5} },
-    ]},
-  { id:"studio",    emoji:"📚", name:"Studia",          desc:"Apri i libri. Miracolo.", cost:0, cd:1,
-    fx:{ follower:[0,0], energia:[-10,-20], soldi:[0,0], vibe:[-5,0], studio:[15,30] },
-    ev:[
-      { p:.10, msg:"🎓 Momento di chiarezza!", bonus:{studio:15} },
-      { p:.20, msg:"💤 Addormentato dopo 10 min.", bonus:{studio:-5,energia:5} },
-    ]},
-  { id:"aperitivo", emoji:"🍹", name:"Aperitivo",       desc:"Spritz + tag obbligatorio", cost:25, cd:1,
-    fx:{ follower:[3,10], energia:[-10,-20], soldi:[-25,-25], vibe:[10,25], studio:[0,0] },
-    ev:[
-      { p:.20, msg:"🤳 Foto iconica! Il post spacca.", bonus:{follower:20,vibe:10} },
-      { p:.10, msg:"😬 Hai detto una cosa imbarazzante.", bonus:{vibe:-15} },
-    ]},
+const ACTIONS=[
+  {id:"reel",     emoji:"📱",name:"Posta un Reel",   desc:"Ballo imbarazzante → follower",cost:0,  cd:2,fx:{follower:[5,25],energia:[-15,-25],soldi:[0,0],vibe:[-5,10],studio:[0,0]},ev:[{p:.15,msg:"🔥 VIRALE! +50 follower!",bonus:{follower:50}},{p:.10,msg:"💀 Mamma ha commentato ❤️. Cringe.",bonus:{vibe:-10}}]},
+  {id:"palestra", emoji:"💪",name:"Vai in palestra", desc:"Chest day, sempre e comunque",cost:10, cd:1,fx:{follower:[0,3],energia:[-20,-30],soldi:[-10,-10],vibe:[5,15],studio:[0,0]},ev:[{p:.20,msg:"🏆 \"Sei un influencer fitness?\"",bonus:{follower:15,vibe:10}},{p:.10,msg:"😬 Polso rotto facendo selfie.",bonus:{energia:-10}}]},
+  {id:"drop",     emoji:"👟",name:"Fila per il Drop",desc:"4 ore per le Supreme x LV",  cost:200,cd:3,fx:{follower:[10,30],energia:[-30,-40],soldi:[-200,-200],vibe:[20,40],studio:[-10,-20]},ev:[{p:.30,msg:"🎉 Le hai prese! Ora vali il doppio.",bonus:{vibe:20,follower:20}},{p:.40,msg:"😭 Esaurite. 4 ore per niente.",bonus:{vibe:-15,energia:-10}}]},
+  {id:"netflix",  emoji:"🎬",name:"Netflix binge",   desc:"Solo una puntata, promesso",  cost:0,  cd:1,fx:{follower:[0,0],energia:[10,20],soldi:[0,0],vibe:[0,5],studio:[-5,-15]},ev:[{p:.20,msg:"📺 Serie finita in una notte. Leggenda.",bonus:{vibe:5}}]},
+  {id:"glovo",    emoji:"🛵",name:"Lavora per Glovo",desc:"Dignità -100, conto +60",     cost:0,  cd:2,fx:{follower:[-2,2],energia:[-20,-30],soldi:[40,80],vibe:[-10,-5],studio:[0,0]},ev:[{p:.15,msg:"💸 Tripla consegna! Guadagno doppio.",bonus:{soldi:50}},{p:.10,msg:"☔ Pioggia. Crollo psicologico.",bonus:{vibe:-10,energia:-10}}]},
+  {id:"vinted",   emoji:"🛍️",name:"Shop Vinted",    desc:"Vecchie Nike → 'vintage'",    cost:0,  cd:2,fx:{follower:[2,8],energia:[-5,-10],soldi:[20,60],vibe:[0,10],studio:[0,0]},ev:[{p:.20,msg:"💰 Offerta folle per le Adidas!",bonus:{soldi:80}},{p:.10,msg:"⭐ Recensione: 'puzzava di umido'.",bonus:{vibe:-5}}]},
+  {id:"studio",   emoji:"📚",name:"Studia (davvero)",desc:"Apri i libri. Miracolo.",     cost:0,  cd:1,fx:{follower:[0,0],energia:[-10,-20],soldi:[0,0],vibe:[-5,0],studio:[15,30]},ev:[{p:.10,msg:"🎓 Momento di chiarezza!",bonus:{studio:15}},{p:.20,msg:"💤 Addormentato dopo 10 min.",bonus:{studio:-5,energia:5}}]},
+  {id:"aperitivo",emoji:"🍹",name:"Aperitivo",       desc:"Spritz + tag obbligatorio",   cost:25, cd:1,fx:{follower:[3,10],energia:[-10,-20],soldi:[-25,-25],vibe:[10,25],studio:[0,0]},ev:[{p:.20,msg:"🤳 Foto iconica! Il post spacca.",bonus:{follower:20,vibe:10}},{p:.10,msg:"😬 Hai detto una cosa imbarazzante.",bonus:{vibe:-15}}]},
 ];
-const RAND_EV = [
-  { msg:"📦 Pacco Amazon arrivato! Giornata salvata.", fx:{vibe:10} },
-  { msg:"💸 Abbonamento scalato. Ouch.", fx:{soldi:-15} },
-  { msg:"🌞 Bella giornata. Riacquisti energie.", fx:{energia:15} },
-  { msg:"😤 Shadowban! Follower -20.", fx:{follower:-20} },
-  { msg:"🎵 Canzone preferita in shuffle. ✨", fx:{vibe:15} },
-  { msg:"📱 Cugino ti ha taggato in un meme.", fx:{vibe:-8} },
-  { msg:"☕ Caffè gratis dal barista.", fx:{energia:10,vibe:5} },
-  { msg:"🧾 Bolletta telefono. Mamma non è contenta.", fx:{soldi:-30} },
+const RAND_EV=[
+  {msg:"📦 Pacco Amazon arrivato! Giornata salvata.",fx:{vibe:10}},
+  {msg:"💸 Abbonamento scalato. Ouch.",fx:{soldi:-15}},
+  {msg:"🌞 Bella giornata. Riacquisti energie.",fx:{energia:15}},
+  {msg:"😤 Shadowban! Follower -20.",fx:{follower:-20}},
+  {msg:"🎵 Canzone preferita in shuffle. ✨",fx:{vibe:15}},
+  {msg:"📱 Cugino ti ha taggato in un meme.",fx:{vibe:-8}},
+  {msg:"☕ Caffè gratis dal barista.",fx:{energia:10,vibe:5}},
+  {msg:"🧾 Bolletta telefono. Mamma non è contenta.",fx:{soldi:-30}},
 ];
-const G_QUOTES = {
-  high:  ["\"sono una macchina! 💪\"","\"chest day ogni giorno\"","\"follower in arrivo bro\"","\"proteina caricata ✅\"","\"mi sento un dio\""],
-  mid:   ["\"chest day?\"","\"oggi si macina\"","\"spritz o proteine?\"","\"un reel e poi palestra\"","\"sui Navigli stasera\""],
-  low:   ["\"che giornataccia...\"","\"shaker vuoto 😤\"","\"shadowban di nuovo\"","\"ho bisogno di dormire\"","\"domani va meglio\""],
-  broke: ["\"sto al verde bro\"","\"Glovo mi salva la vita\"","\"vendo le Adidas\""],
-  tired: ["\"crollo...💤\"","\"non reggo più\"","\"serve caffeina SUBITO\""],
+const G_QUOTES={
+  high:["\"sono una macchina! 💪\"","\"chest day ogni giorno\"","\"follower in arrivo bro\"","\"proteina caricata ✅\"","\"mi sento un dio\""],
+  mid: ["\"chest day?\"","\"oggi si macina\"","\"spritz o proteine?\"","\"un reel e poi palestra\"","\"sui Navigli stasera\""],
+  low: ["\"che giornataccia...\"","\"shaker vuoto 😤\"","\"shadowban di nuovo\"","\"ho bisogno di dormire\"","\"domani va meglio\""],
+  broke:["\"sto al verde bro\"","\"Glovo mi salva\"","\"vendo le Adidas\""],
+  tired:["\"crollo...💤\"","\"non reggo più\"","\"serve caffeina SUBITO\""],
 };
 
-// ============================================================
-// STATE
-// ============================================================
-let state = {};
-function initState(name, avatar) {
-  state = {
-    name, avatar,
-    stats: { follower:50, energia:80, soldi:150, vibe:50, studio:30 },
-    day:1, actionsLeft:3, cooldowns:{}, log:[], over:false,
-  };
-}
-const clamp = (v,mn=0,mx=100) => Math.min(mx,Math.max(mn,v));
-const rand  = (a,b) => Math.floor(Math.random()*(b-a+1))+a;
-const pick  = arr => arr[rand(0,arr.length-1)];
-function applyDelta(s,k,d) {
-  if (k==="follower"||k==="soldi") s[k]=Math.max(0,s[k]+d);
-  else s[k]=clamp(s[k]+d);
-}
+// ============================================================ STATE
+let state={};
+function initState(name,avatar){state={name,avatar,stats:{follower:50,energia:80,soldi:150,vibe:50,studio:30},day:1,actionsLeft:3,cooldowns:{},log:[],over:false};}
+const clamp=(v,mn=0,mx=100)=>Math.min(mx,Math.max(mn,v));
+const rand=(a,b)=>Math.floor(Math.random()*(b-a+1))+a;
+const pick=arr=>arr[rand(0,arr.length-1)];
+function applyDelta(s,k,d){if(k==="follower"||k==="soldi")s[k]=Math.max(0,s[k]+d);else s[k]=clamp(s[k]+d);}
 
-// ============================================================
-// UI HELPERS
-// ============================================================
-function showScreen(id) {
-  document.querySelectorAll(".screen").forEach(s=>s.classList.remove("active"));
-  document.getElementById("screen-"+id).classList.add("active");
-}
+// ============================================================ UI
+function showScreen(id){document.querySelectorAll(".screen").forEach(s=>s.classList.remove("active"));document.getElementById("screen-"+id).classList.add("active");}
+let ntTimer;
+function toast(msg,color="#A855F7"){const el=document.getElementById("notif");el.textContent=msg;el.style.background=color;el.style.color="#000";el.style.boxShadow=`0 4px 20px ${color}88`;el.classList.add("show");clearTimeout(ntTimer);ntTimer=setTimeout(()=>el.classList.remove("show"),2800);}
 
-let notifTimer;
-function toast(msg, color="#A855F7") {
-  const el = document.getElementById("notif");
-  el.textContent = msg; el.style.background = color; el.style.color="#000";
-  el.style.boxShadow = `0 4px 20px ${color}88`;
-  el.classList.add("show");
-  clearTimeout(notifTimer);
-  notifTimer = setTimeout(()=>el.classList.remove("show"), 2800);
-}
+function addLog(msg,type="neutral"){state.log.unshift({msg,type,day:state.day});if(state.log.length>50)state.log.pop();renderLog();}
+function renderLog(){document.getElementById("log-list").innerHTML=state.log.map(e=>`<div class="log-entry ${e.type}"><span class="log-day">G${e.day} · </span>${e.msg}</div>`).join("");}
 
-// Log drawer
-const logDrawer  = document.getElementById("log-drawer");
-const logOverlay = document.getElementById("log-overlay");
-document.getElementById("log-btn").addEventListener("click", ()=>{
-  logDrawer.classList.add("open"); logOverlay.classList.add("active");
-});
-logOverlay.addEventListener("click", ()=>{
-  logDrawer.classList.remove("open"); logOverlay.classList.remove("active");
-});
-logDrawer.querySelector(".log-handle").addEventListener("click", ()=>{
-  logDrawer.classList.remove("open"); logOverlay.classList.remove("active");
-});
-
-function addLog(msg, type="neutral") {
-  state.log.unshift({msg, type, day:state.day});
-  if (state.log.length>40) state.log.pop();
-  renderLog();
-}
-function renderLog() {
-  document.getElementById("log-list").innerHTML =
-    state.log.map(e=>`<div class="log-entry ${e.type}"><span class="log-day">G${e.day} · </span>${e.msg}</div>`).join("");
-}
-
-// ============================================================
-// RENDER STATS (horizontal bar row)
-// ============================================================
-function renderStats() {
-  const col = document.getElementById("stats-col");
-  col.innerHTML = Object.entries(STAT_CFG).map(([k,cfg])=>{
-    const pct = Math.min(100,(state.stats[k]/cfg.max)*100);
-    return `<div class="stat-row">
-      <span class="stat-icon">${cfg.icon}</span>
-      <div class="stat-track"><div class="stat-fill" style="width:${pct}%;background:${cfg.color};box-shadow:0 0 6px ${cfg.color}88"></div></div>
-      <span class="stat-val" style="color:${cfg.color}">${state.stats[k]}</span>
-    </div>`;
+// ============================================================ RENDER STATS
+function renderStats(){
+  const c=document.getElementById("stats-container");
+  c.innerHTML=Object.entries(STAT_CFG).map(([k,cfg])=>{
+    const pct=Math.min(100,(state.stats[k]/cfg.max)*100);
+    return`<div class="stat-row2"><div class="stat-hdr"><span class="stat-name">${cfg.icon} ${cfg.label}</span><span class="stat-val" style="color:${cfg.color}">${state.stats[k]}</span></div><div class="stat-track"><div class="stat-fill" style="width:${pct}%;background:${cfg.color};box-shadow:0 0 7px ${cfg.color}88"></div></div></div>`;
   }).join("");
-
-  document.getElementById("m-player").textContent = `${state.avatar} ${state.name}`;
-  document.getElementById("m-day").textContent = `📅 ${state.day}/30`;
-  const ma = document.getElementById("m-act");
-  ma.textContent = `⚡×${state.actionsLeft}`;
-  ma.className = "m-act "+(state.actionsLeft>0?"ok":"empty");
+  const v=state.stats.vibe;
+  document.getElementById("vibe-label").textContent=v>=70?"🔥 On fire":v>=40?"😐 Normale":"💀 Cringe";
+  document.getElementById("m-player").textContent=`${state.avatar} ${state.name}`;
+  document.getElementById("m-day").textContent=`📅 ${state.day}/30`;
+  const ma=document.getElementById("m-act");ma.textContent=`⚡×${state.actionsLeft}`;ma.className="m-act "+(state.actionsLeft>0?"ok":"empty");
 }
 
-// ============================================================
-// RENDER ACTIONS
-// ============================================================
-function renderActions() {
-  const grid = document.getElementById("actions-grid");
-  grid.innerHTML = ACTIONS.map(a=>{
-    const cd = state.cooldowns[a.id]||0;
-    const broke = state.stats.soldi < a.cost;
-    const tired = state.stats.energia < 15;
-    const locked = cd>0||broke||tired;
+// ============================================================ RENDER ACTIONS
+function renderActions(){
+  const grid=document.getElementById("actions-grid");
+  grid.innerHTML=ACTIONS.map(a=>{
+    const cd=state.cooldowns[a.id]||0,broke=state.stats.soldi<a.cost,tired=state.stats.energia<15,locked=cd>0||broke||tired;
     let tags="";
-    if (a.cost>0) tags+=`<span class="ac-tag tag-cost">💶 -${a.cost}€</span>`;
-    if (cd>0)     tags+=`<span class="ac-tag tag-cd">⏳ -${cd}gg</span>`;
-    if (tired&&!cd&&!broke) tags+=`<span class="ac-tag tag-misc">💤 stanco</span>`;
-    if (broke&&!cd) tags+=`<span class="ac-tag tag-misc">💸 no €</span>`;
-    return `<button class="action-card${locked?" locked":""}" data-id="${a.id}" ${locked?"disabled":""}>
-      <span class="ac-emoji">${a.emoji}</span>
-      <div class="ac-name">${a.name}</div>
-      <div class="ac-desc">${a.desc}</div>${tags}
-    </button>`;
+    if(a.cost>0)tags+=`<span class="ac-tag tag-cost">💶 -${a.cost}€</span>`;
+    if(cd>0)tags+=`<span class="ac-tag tag-cd">⏳ -${cd}gg</span>`;
+    if(tired&&!cd&&!broke)tags+=`<span class="ac-tag tag-misc">💤 stanco</span>`;
+    if(broke&&!cd)tags+=`<span class="ac-tag tag-misc">💸 no €</span>`;
+    return`<button class="action-card${locked?" locked":""}" data-id="${a.id}" ${locked?"disabled":""}><span class="ac-emoji">${a.emoji}</span><div class="ac-name">${a.name}</div><div class="ac-desc">${a.desc}</div>${tags}</button>`;
   }).join("");
-  grid.querySelectorAll(".action-card:not(.locked)").forEach(btn=>{
-    btn.addEventListener("click",()=>doAction(btn.dataset.id));
-  });
+  grid.querySelectorAll(".action-card:not(.locked)").forEach(btn=>{btn.addEventListener("click",()=>doAction(btn.dataset.id));});
 }
 
-// ============================================================
-// GIANLUCA CHARACTER
-// ============================================================
-function updateGianluca() {
-  const {vibe:v, energia:e, soldi:s} = state.stats;
-  const svg = document.getElementById("g-svg");
-  const bubble = document.getElementById("g-bubble");
-  const mouth = document.getElementById("g-mouth");
-  const bl = document.getElementById("brow-l");
-  const br = document.getElementById("brow-r");
-  if (!svg) return;
-
-  let mood, quotes;
-  if (e<20)      { mood="low";  quotes=G_QUOTES.tired; }
-  else if (s<20) { mood="low";  quotes=G_QUOTES.broke; }
-  else if (v>=70){ mood="high"; quotes=G_QUOTES.high;  }
-  else if (v>=35){ mood="mid";  quotes=G_QUOTES.mid;   }
-  else           { mood="low";  quotes=G_QUOTES.low;   }
-
+// ============================================================ GIANLUCA
+function updateGianluca(){
+  const {vibe:v,energia:e,soldi:s}=state.stats;
+  const svg=document.getElementById("g-svg"),bubble=document.getElementById("g-bubble"),mouth=document.getElementById("g-mouth"),bl=document.getElementById("brow-l"),br=document.getElementById("brow-r");
+  if(!svg)return;
+  let mood,quotes;
+  if(e<20){mood="low";quotes=G_QUOTES.tired;}
+  else if(s<20){mood="low";quotes=G_QUOTES.broke;}
+  else if(v>=70){mood="high";quotes=G_QUOTES.high;}
+  else if(v>=35){mood="mid";quotes=G_QUOTES.mid;}
+  else{mood="low";quotes=G_QUOTES.low;}
   svg.classList.remove("vibe-high","vibe-low");
-  if (mood==="high") svg.classList.add("vibe-high");
-  if (mood==="low")  svg.classList.add("vibe-low");
-
-  if (mouth) {
-    if (mood==="high")     mouth.setAttribute("d","M104 114 Q120 126 136 114");
-    else if (mood==="low") mouth.setAttribute("d","M106 120 Q120 112 134 120");
-    else                   mouth.setAttribute("d","M108 112 Q120 120 132 112");
-  }
-  if (bl&&br) {
-    if (mood==="high")     { bl.setAttribute("d","M90 64 Q103 60 107 63"); br.setAttribute("d","M133 63 Q137 60 150 64"); }
-    else if (mood==="low") { bl.setAttribute("d","M90 62 Q103 67 107 65"); br.setAttribute("d","M133 65 Q137 67 150 62"); }
-    else                   { bl.setAttribute("d","M90 66 Q103 62 107 65"); br.setAttribute("d","M133 65 Q137 62 150 66"); }
-  }
-  if (Math.random()<.35||!bubble.dataset.set) {
-    bubble.textContent = quotes[Math.floor(Math.random()*quotes.length)];
-    bubble.dataset.set="1";
-  }
+  if(mood==="high")svg.classList.add("vibe-high");
+  if(mood==="low")svg.classList.add("vibe-low");
+  if(mouth){if(mood==="high")mouth.setAttribute("d","M104 114 Q120 126 136 114");else if(mood==="low")mouth.setAttribute("d","M106 120 Q120 112 134 120");else mouth.setAttribute("d","M108 112 Q120 120 132 112");}
+  if(bl&&br){if(mood==="high"){bl.setAttribute("d","M90 64 Q103 60 107 63");br.setAttribute("d","M133 63 Q137 60 150 64");}else if(mood==="low"){bl.setAttribute("d","M90 62 Q103 67 107 65");br.setAttribute("d","M133 65 Q137 67 150 62");}else{bl.setAttribute("d","M90 66 Q103 62 107 65");br.setAttribute("d","M133 65 Q137 62 150 66");}}
+  if(Math.random()<.35||!bubble.dataset.set){bubble.textContent=quotes[Math.floor(Math.random()*quotes.length)];bubble.dataset.set="1";}
 }
-function shakeGianluca() {
-  const svg = document.getElementById("g-svg");
-  if (!svg) return;
-  svg.classList.remove("shake");
-  void svg.offsetWidth; // reflow to restart
-  svg.classList.add("shake");
-  setTimeout(()=>svg.classList.remove("shake"), 380);
-}
+function shakeGianluca(){const svg=document.getElementById("g-svg");if(!svg)return;svg.classList.remove("shake");void svg.offsetWidth;svg.classList.add("shake");setTimeout(()=>svg.classList.remove("shake"),380);}
 
-// ============================================================
-// GAME LOGIC
-// ============================================================
-function doAction(id) {
-  if (state.over||state.actionsLeft<=0) { toast("Hai già fatto abbastanza oggi!","#FF6B6B"); return; }
-  const action = ACTIONS.find(a=>a.id===id);
-  if (!action) return;
-  const ns={...state.stats};
-  let parts=[];
-  Object.entries(action.fx).forEach(([k,[mn,mx]])=>{
-    const d=rand(mn,mx);
-    applyDelta(ns,k,d);
-    if(d!==0) parts.push(`${STAT_CFG[k].icon}${d>0?"+":""}${d}`);
-  });
+// ============================================================ GAME LOGIC
+function doAction(id){
+  if(state.over||state.actionsLeft<=0){toast("Hai già fatto abbastanza oggi!","#FF6B6B");return;}
+  const action=ACTIONS.find(a=>a.id===id);if(!action)return;
+  const ns={...state.stats};let parts=[];
+  Object.entries(action.fx).forEach(([k,[mn,mx]])=>{const d=rand(mn,mx);applyDelta(ns,k,d);if(d!==0)parts.push(`${STAT_CFG[k].icon}${d>0?"+":""}${d}`);});
   let evFired=false;
-  for (const ev of action.ev) {
-    if (Math.random()<ev.p) {
-      if (ev.bonus) Object.entries(ev.bonus).forEach(([k,v])=>applyDelta(ns,k,v));
-      addLog(`${action.emoji} ${ev.msg}`,"event");
-      toast(ev.msg,"#FFE66D");
-      evFired=true; break;
-    }
-  }
-  if (!evFired) addLog(`${action.emoji} ${action.name} → ${parts.join(" ")}`,"good");
-  state.stats=ns;
-  state.cooldowns[action.id]=action.cd;
-  state.actionsLeft--;
-  renderStats(); updateGianluca(); shakeGianluca(); renderActions();
-  if (state.stats.follower>=400) { toast("🏆 LEGGENDA!","#FFD700"); state.over=true; setTimeout(endGame,1500); }
-  if (state.stats.energia<=0)    { toast("💀 Crollato. Fine.","#FF6B6B"); state.over=true; setTimeout(endGame,1500); }
+  for(const ev of action.ev){if(Math.random()<ev.p){if(ev.bonus)Object.entries(ev.bonus).forEach(([k,v])=>applyDelta(ns,k,v));addLog(`${action.emoji} ${ev.msg}`,"event");toast(ev.msg,"#FFE66D");evFired=true;break;}}
+  if(!evFired)addLog(`${action.emoji} ${action.name} → ${parts.join(" ")}`,"good");
+  state.stats=ns;state.cooldowns[action.id]=action.cd;state.actionsLeft--;
+  renderStats();updateGianluca();shakeGianluca();renderActions();
+  if(state.stats.follower>=400){toast("🏆 LEGGENDA!","#FFD700");state.over=true;setTimeout(endGame,1500);}
+  if(state.stats.energia<=0){toast("💀 Crollato. Fine.","#FF6B6B");state.over=true;setTimeout(endGame,1500);}
 }
 
-function nextDay() {
-  if (state.over||state.day>=30) { endGame(); return; }
-  state.day++; state.actionsLeft=3;
+function nextDay(){
+  if(state.over||state.day>=30){endGame();return;}
+  state.day++;state.actionsLeft=3;
   state.stats.energia=clamp(state.stats.energia+10);
-  Object.keys(state.cooldowns).forEach(k=>{ state.cooldowns[k]=Math.max(0,state.cooldowns[k]-1); });
-  if (Math.random()<.40) {
-    const ev=pick(RAND_EV);
-    Object.entries(ev.fx).forEach(([k,v])=>applyDelta(state.stats,k,v));
-    addLog(`📅 ${ev.msg}`,"event"); toast(ev.msg,"#FFE66D");
-  } else { addLog(`📅 Giorno ${state.day} inizia.`,"neutral"); }
-  renderStats(); updateGianluca(); renderActions();
-  if (state.day>=30) setTimeout(endGame,700);
+  Object.keys(state.cooldowns).forEach(k=>{state.cooldowns[k]=Math.max(0,state.cooldowns[k]-1);});
+  if(Math.random()<.40){const ev=pick(RAND_EV);Object.entries(ev.fx).forEach(([k,v])=>applyDelta(state.stats,k,v));addLog(`📅 ${ev.msg}`,"event");toast(ev.msg,"#FFE66D");}
+  else addLog(`📅 Giorno ${state.day} inizia.`,"neutral");
+  renderStats();updateGianluca();renderActions();
+  if(state.day>=30)setTimeout(endGame,700);
 }
 
-function endGame() {
-  const s=state.stats;
-  const score=Math.floor((s.follower*2+s.vibe+s.studio+s.soldi/5)/5);
+function endGame(){
+  const s=state.stats,score=Math.floor((s.follower*2+s.vibe+s.studio+s.soldi/5)/5);
   let rank,rc;
-  if (score>=80)      { rank="LEGGENDA DEL FEED 🏆"; rc="#FFD700"; }
-  else if (score>=60) { rank="INFLUENCER IN ASCESA 🔥"; rc="#FF6B6B"; }
-  else if (score>=40) { rank="CONTENT CREATOR MEDIO 😐"; rc="#A855F7"; }
-  else                { rank="GHOSTATO DALL'ALGORITMO 👻"; rc="#888"; }
-
-  // update end mouth based on score
-  const em = document.getElementById("end-mouth");
-  if (em) em.setAttribute("d", score>=60 ? "M104 98 Q120 110 136 98" : score>=40 ? "M108 98 Q120 106 132 98" : "M108 104 Q120 96 132 104");
-
+  if(score>=80){rank="LEGGENDA DEL FEED 🏆";rc="#FFD700";}
+  else if(score>=60){rank="INFLUENCER IN ASCESA 🔥";rc="#FF6B6B";}
+  else if(score>=40){rank="CONTENT CREATOR MEDIO 😐";rc="#A855F7";}
+  else{rank="GHOSTATO DALL'ALGORITMO 👻";rc="#888";}
+  const em=document.getElementById("end-mouth");
+  if(em)em.setAttribute("d",score>=60?"M104 98 Q120 110 136 98":score>=40?"M108 98 Q120 106 132 98":"M108 104 Q120 96 132 104");
   document.getElementById("end-rank").textContent=rank;
   document.getElementById("end-rank").style.color=rc;
   document.getElementById("end-meta").textContent=`Giorno ${state.day} · ${state.name}`;
   document.getElementById("end-score").textContent=score;
   document.getElementById("end-score").style.color=rc;
-  document.getElementById("end-stats").innerHTML=Object.entries(STAT_CFG).map(([k,cfg])=>
-    `<div class="end-stat-row"><span class="end-stat-lbl">${cfg.icon} ${cfg.label}</span><span style="color:${cfg.color};font-weight:700">${state.stats[k]}</span></div>`
-  ).join("");
+  document.getElementById("end-stats").innerHTML=Object.entries(STAT_CFG).map(([k,cfg])=>`<div class="end-stat-row"><span class="end-stat-lbl">${cfg.icon} ${cfg.label}</span><span style="color:${cfg.color};font-weight:700">${state.stats[k]}</span></div>`).join("");
   showScreen("end");
 }
 
-// ============================================================
-// SETUP
-// ============================================================
-(function setup() {
-  // Avatar picker — griglia rapida + input libero
-  const ag = document.getElementById("avatar-grid");
-  const preview = document.getElementById("avatar-preview");
-  const emojiInput = document.getElementById("avatar-input");
-  let selAv = AVATARS[0];
+// ============================================================ SCORE IMAGE
+function roundRect(ctx,x,y,w,h,r){ctx.beginPath();ctx.moveTo(x+r,y);ctx.lineTo(x+w-r,y);ctx.quadraticCurveTo(x+w,y,x+w,y+r);ctx.lineTo(x+w,y+h-r);ctx.quadraticCurveTo(x+w,y+h,x+w-r,y+h);ctx.lineTo(x+r,y+h);ctx.quadraticCurveTo(x,y+h,x,y+h-r);ctx.lineTo(x,y+r);ctx.quadraticCurveTo(x,y,x+r,y);ctx.closePath();}
 
-  function setAvatar(em) {
-    // prende solo il primo grapheme cluster (un'emoji)
-    const chars = [...em];
-    const val = chars[0] || AVATARS[0];
-    selAv = val;
-    preview.textContent = val;
-    preview.classList.remove("bump");
-    void preview.offsetWidth;
-    preview.classList.add("bump");
-    document.querySelectorAll(".avatar-btn").forEach(b => {
-      b.classList.toggle("selected", b.textContent === val);
+function generateScoreImage(){
+  return new Promise(resolve=>{
+    const canvas=document.getElementById("share-canvas");
+    const W=1080,H=1080;canvas.width=W;canvas.height=H;
+    const ctx=canvas.getContext("2d");
+    const s=state.stats,score=Math.floor((s.follower*2+s.vibe+s.studio+s.soldi/5)/5);
+    let rank,rankColor;
+    if(score>=80){rank="LEGGENDA DEL FEED 🏆";rankColor="#FFD700";}
+    else if(score>=60){rank="INFLUENCER IN ASCESA 🔥";rankColor="#FF6B6B";}
+    else if(score>=40){rank="CONTENT CREATOR MEDIO 😐";rankColor="#A855F7";}
+    else{rank="GHOSTATO DALL'ALGORITMO 👻";rankColor="#888";}
+    const bg=ctx.createRadialGradient(W/2,H/2,0,W/2,H/2,W*.8);bg.addColorStop(0,"#1a0a2e");bg.addColorStop(1,"#08080e");ctx.fillStyle=bg;ctx.fillRect(0,0,W,H);
+    for(let i=0;i<12000;i++){ctx.fillStyle=`rgba(255,255,255,${Math.random()*.03})`;ctx.fillRect(Math.random()*W,Math.random()*H,1,1);}
+    ctx.save();ctx.beginPath();ctx.arc(W/2,-80,620,0,Math.PI);ctx.strokeStyle="rgba(168,85,247,0.15)";ctx.lineWidth=2;ctx.stroke();ctx.restore();
+    ctx.font="bold 32px monospace";ctx.fillStyle="#A855F7";ctx.textAlign="center";ctx.fillText("ZOOMER SIMULATOR 2026",W/2,90);
+    ctx.font="bold 72px serif";ctx.fillStyle=rankColor;ctx.shadowColor=rankColor;ctx.shadowBlur=30;ctx.fillText(rank,W/2,200);ctx.shadowBlur=0;
+    ctx.font="26px monospace";ctx.fillStyle="#777";ctx.fillText(`${state.avatar}  ${state.name}  ·  Giorno ${state.day}/30`,W/2,260);
+    ctx.font="bold 240px serif";ctx.fillStyle=rankColor;ctx.shadowColor=rankColor;ctx.shadowBlur=60;ctx.fillText(score,W/2,520);ctx.shadowBlur=0;
+    ctx.font="bold 36px monospace";ctx.fillStyle="rgba(255,255,255,0.3)";ctx.fillText("SCORE FINALE",W/2,565);
+    const cX=160,cY=610,cW=W-320,cH=290,cR=24;
+    roundRect(ctx,cX,cY,cW,cH,cR);ctx.fillStyle="rgba(255,255,255,0.05)";ctx.fill();ctx.strokeStyle="rgba(255,255,255,0.1)";ctx.lineWidth=1.5;ctx.stroke();
+    const entries=Object.entries(STAT_CFG),rH=cH/entries.length;
+    entries.forEach(([k,cfg],i)=>{
+      const ry=cY+i*rH+rH/2;
+      ctx.font="28px monospace";ctx.fillStyle="#aaa";ctx.textAlign="left";ctx.fillText(`${cfg.icon}  ${cfg.label}`,cX+32,ry+10);
+      const bX=cX+280,bY=ry-8,bW=cW-330,bH2=12;
+      ctx.fillStyle="rgba(255,255,255,0.07)";roundRect(ctx,bX,bY,bW,bH2,6);ctx.fill();
+      const pct=Math.min(1,s[k]/cfg.max);ctx.fillStyle=cfg.color;ctx.shadowColor=cfg.color;ctx.shadowBlur=8;roundRect(ctx,bX,bY,bW*pct,bH2,6);ctx.fill();ctx.shadowBlur=0;
+      ctx.font="bold 28px monospace";ctx.fillStyle=cfg.color;ctx.textAlign="right";ctx.fillText(s[k],cX+cW-32,ry+10);
     });
-  }
-
-  AVATARS.forEach(a => {
-    const btn = document.createElement("button");
-    btn.className = "avatar-btn" + (a === selAv ? " selected" : "");
-    btn.textContent = a;
-    btn.addEventListener("click", () => {
-      emojiInput.value = "";
-      setAvatar(a);
-    });
-    ag.appendChild(btn);
-  });
-
-  // input libero: l'utente scrive/incolla qualsiasi emoji dalla tastiera
-  emojiInput.addEventListener("input", () => {
-    const val = emojiInput.value.trim();
-    if (val) setAvatar(val);
-  });
-  // su iOS la tastiera emoji può non triggerare "input" subito — usiamo anche keyup
-  emojiInput.addEventListener("keyup", () => {
-    const val = emojiInput.value.trim();
-    if (val) setAvatar(val);
-  });
-
-  const ni=document.getElementById("player-name");
-  const sb=document.getElementById("start-btn");
-  ni.addEventListener("input",()=>{ sb.disabled=!ni.value.trim(); });
-
-  sb.addEventListener("click",()=>{
-    const name=ni.value.trim(); if(!name) return;
-    initState(name, selAv);
-    addLog(`${selAv} ${name} inizia la sua epica avventura. In bocca al lupo!`,"neutral");
-    renderStats(); updateGianluca(); renderActions();
-    showScreen("game");
-  });
-
-  document.getElementById("sleep-btn").addEventListener("click", nextDay);
-  document.getElementById("restart-btn").addEventListener("click",()=>{
-    ni.value=""; sb.disabled=true; showScreen("intro");
-  });
-
-  // ---- SHARE BUTTON ----
-  const shareBtn   = document.getElementById("share-btn");
-  const shareBadge = document.getElementById("share-badge");
-  const SHARE_URL  = window.location.href;
-  const SHARE_DATA = {
-    title: "Zoomer Simulator 2025",
-    text:  "🏋️ Diventa il palestrato più iconico di Milano! Gioca a Zoomer Simulator",
-    url:   SHARE_URL,
-  };
-
-  shareBtn.addEventListener("click", async () => {
-    // 1. Prova Web Share API (iOS Safari, Android Chrome)
-    if (navigator.share) {
-      try {
-        await navigator.share(SHARE_DATA);
-        return;
-      } catch(e) {
-        // utente ha annullato o errore — fallback sotto
-        if (e.name === "AbortError") return;
-      }
-    }
-    // 2. Fallback: copia URL negli appunti
-    try {
-      await navigator.clipboard.writeText(SHARE_URL);
-      shareBadge.textContent = "✅ Link copiato!";
-      shareBtn.classList.add("copied");
-      setTimeout(() => {
-        shareBadge.textContent = "Apri nel browser";
-        shareBtn.classList.remove("copied");
-      }, 2400);
-    } catch(e) {
-      // 3. Ultimo fallback: prompt manuale
-      prompt("Copia questo link:", SHARE_URL);
-    }
-  });
-})();
-
-// ============================================================
-// GENERA IMMAGINE PUNTEGGIO E CONDIVIDI
-// ============================================================
-function generateScoreImage() {
-  return new Promise((resolve) => {
-    const canvas = document.getElementById("share-canvas");
-    const W = 1080, H = 1080;
-    canvas.width = W; canvas.height = H;
-    const ctx = canvas.getContext("2d");
-
-    const s      = state.stats;
-    const score  = Math.floor((s.follower*2+s.vibe+s.studio+s.soldi/5)/5);
-    let rank, rankColor;
-    if (score>=80)      { rank="LEGGENDA DEL FEED 🏆"; rankColor="#FFD700"; }
-    else if (score>=60) { rank="INFLUENCER IN ASCESA 🔥"; rankColor="#FF6B6B"; }
-    else if (score>=40) { rank="CONTENT CREATOR MEDIO 😐"; rankColor="#A855F7"; }
-    else                { rank="GHOSTATO DALL'ALGORITMO 👻"; rankColor="#888"; }
-
-    // --- BACKGROUND ---
-    const bgGrad = ctx.createRadialGradient(W/2,H/2,0,W/2,H/2,W*0.8);
-    bgGrad.addColorStop(0,"#1a0a2e");
-    bgGrad.addColorStop(1,"#08080e");
-    ctx.fillStyle = bgGrad;
-    ctx.fillRect(0,0,W,H);
-
-    // grain overlay
-    for (let i=0;i<12000;i++) {
-      ctx.fillStyle=`rgba(255,255,255,${Math.random()*0.03})`;
-      ctx.fillRect(Math.random()*W,Math.random()*H,1,1);
-    }
-
-    // decorative top arc
-    ctx.save();
-    ctx.beginPath();
-    ctx.arc(W/2,-80,620,0,Math.PI);
-    ctx.strokeStyle="rgba(168,85,247,0.15)";
-    ctx.lineWidth=2;
-    ctx.stroke();
-    ctx.restore();
-
-    // --- EYEBROW ---
-    ctx.font="bold 32px 'Space Mono',monospace";
-    ctx.fillStyle="#A855F7";
-    ctx.textAlign="center";
-    ctx.letterSpacing="8px";
-    ctx.fillText("ZOOMER SIMULATOR 2026", W/2, 90);
-
-    // --- RANK ---
-    ctx.font="bold 72px 'Bebas Neue',cursive";
-    ctx.fillStyle=rankColor;
-    ctx.shadowColor=rankColor;
-    ctx.shadowBlur=30;
-    ctx.fillText(rank, W/2, 200);
-    ctx.shadowBlur=0;
-
-    // --- NAME + DAY ---
-    ctx.font="26px 'Space Mono',monospace";
-    ctx.fillStyle="#777";
-    ctx.fillText(`${state.avatar}  ${state.name}  ·  Giorno ${state.day}/30`, W/2, 260);
-
-    // --- SCORE BIG ---
-    ctx.font="bold 240px 'Bebas Neue',cursive";
-    ctx.fillStyle=rankColor;
-    ctx.shadowColor=rankColor;
-    ctx.shadowBlur=60;
-    ctx.fillText(score, W/2, 520);
-    ctx.shadowBlur=0;
-    ctx.font="bold 36px 'Space Mono',monospace";
-    ctx.fillStyle="rgba(255,255,255,0.3)";
-    ctx.fillText("SCORE FINALE", W/2, 565);
-
-    // --- STATS CARD ---
-    const cardX=160, cardY=610, cardW=W-320, cardH=290, cardR=24;
-    ctx.beginPath();
-    ctx.moveTo(cardX+cardR,cardY);
-    ctx.lineTo(cardX+cardW-cardR,cardY);
-    ctx.quadraticCurveTo(cardX+cardW,cardY,cardX+cardW,cardY+cardR);
-    ctx.lineTo(cardX+cardW,cardY+cardH-cardR);
-    ctx.quadraticCurveTo(cardX+cardW,cardY+cardH,cardX+cardW-cardR,cardY+cardH);
-    ctx.lineTo(cardX+cardR,cardY+cardH);
-    ctx.quadraticCurveTo(cardX,cardY+cardH,cardX,cardY+cardH-cardR);
-    ctx.lineTo(cardX,cardY+cardR);
-    ctx.quadraticCurveTo(cardX,cardY,cardX+cardR,cardY);
-    ctx.closePath();
-    ctx.fillStyle="rgba(255,255,255,0.05)";
-    ctx.fill();
-    ctx.strokeStyle="rgba(255,255,255,0.1)";
-    ctx.lineWidth=1.5;
-    ctx.stroke();
-
-    // stats rows
-    const statEntries = Object.entries(STAT_CFG);
-    const rowH = cardH / statEntries.length;
-    statEntries.forEach(([k,cfg],i) => {
-      const ry = cardY + i*rowH + rowH/2;
-      // label
-      ctx.font="28px 'Space Mono',monospace";
-      ctx.fillStyle="#aaa";
-      ctx.textAlign="left";
-      ctx.fillText(`${cfg.icon}  ${cfg.label}`, cardX+32, ry+10);
-      // bar track
-      const barX=cardX+280, barY=ry-8, barW=cardW-330, barH2=12;
-      ctx.fillStyle="rgba(255,255,255,0.07)";
-      roundRect(ctx,barX,barY,barW,barH2,6);
-      ctx.fill();
-      // bar fill
-      const pct = Math.min(1, s[k]/cfg.max);
-      ctx.fillStyle=cfg.color;
-      ctx.shadowColor=cfg.color;
-      ctx.shadowBlur=8;
-      roundRect(ctx,barX,barY,barW*pct,barH2,6);
-      ctx.fill();
-      ctx.shadowBlur=0;
-      // value
-      ctx.font="bold 28px 'Space Mono',monospace";
-      ctx.fillStyle=cfg.color;
-      ctx.textAlign="right";
-      ctx.fillText(s[k], cardX+cardW-32, ry+10);
-    });
-
-    // --- FOOTER ---
-    ctx.textAlign="center";
-    ctx.font="24px 'Space Mono',monospace";
-    ctx.fillStyle="#333";
-    ctx.fillText("beyondtheplatforms.com  ·  @beyond_the_platforms", W/2, H-40);
-
-    // bottom accent line
-    const lineGrad=ctx.createLinearGradient(0,H-20,W,H-20);
-    lineGrad.addColorStop(0,"transparent");
-    lineGrad.addColorStop(0.3,"#A855F7");
-    lineGrad.addColorStop(0.7,"#FF6B6B");
-    lineGrad.addColorStop(1,"transparent");
-    ctx.strokeStyle=lineGrad;
-    ctx.lineWidth=2;
-    ctx.beginPath();
-    ctx.moveTo(120,H-20);
-    ctx.lineTo(W-120,H-20);
-    ctx.stroke();
-
+    ctx.textAlign="center";ctx.font="24px monospace";ctx.fillStyle="#333";ctx.fillText("beyondtheplatforms.com  ·  @beyond_the_platforms",W/2,H-40);
+    const lg=ctx.createLinearGradient(0,H-20,W,H-20);lg.addColorStop(0,"transparent");lg.addColorStop(.3,"#A855F7");lg.addColorStop(.7,"#FF6B6B");lg.addColorStop(1,"transparent");ctx.strokeStyle=lg;ctx.lineWidth=2;ctx.beginPath();ctx.moveTo(120,H-20);ctx.lineTo(W-120,H-20);ctx.stroke();
     resolve(canvas.toDataURL("image/png"));
   });
 }
 
-function roundRect(ctx,x,y,w,h,r){
-  ctx.beginPath();
-  ctx.moveTo(x+r,y);
-  ctx.lineTo(x+w-r,y);
-  ctx.quadraticCurveTo(x+w,y,x+w,y+r);
-  ctx.lineTo(x+w,y+h-r);
-  ctx.quadraticCurveTo(x+w,y+h,x+w-r,y+h);
-  ctx.lineTo(x+r,y+h);
-  ctx.quadraticCurveTo(x,y+h,x,y+h-r);
-  ctx.lineTo(x,y+r);
-  ctx.quadraticCurveTo(x,y,x+r,y);
-  ctx.closePath();
-}
-
-document.getElementById("score-share-btn").addEventListener("click", async function() {
-  const btn = this;
-  const origHTML = btn.innerHTML;
-  btn.classList.add("loading");
-  btn.innerHTML = "<span>⏳</span><span>Generazione in corso...</span>";
-
-  try {
-    const dataUrl = await generateScoreImage();
-
-    // converti dataURL in Blob/File
-    const res   = await fetch(dataUrl);
-    const blob  = await res.blob();
-    const file  = new File([blob], "zoomer-score.png", { type:"image/png" });
-
-    // 1. Web Share API con file (iOS 15+, Android)
-    if (navigator.share && navigator.canShare && navigator.canShare({ files:[file] })) {
-      await navigator.share({
-        files: [file],
-        title: "Zoomer Simulator 2026",
-        text:  `Ho appena fatto ${document.getElementById("end-score").textContent} punti su Zoomer Simulator! 🏋️ @beyond_the_platforms`,
-      });
-      btn.classList.remove("loading");
-      btn.innerHTML = origHTML;
-      return;
+document.getElementById("score-share-btn").addEventListener("click",async function(){
+  const btn=this,orig=btn.innerHTML;
+  btn.classList.add("loading");btn.innerHTML="<span>⏳</span><span>Generazione...</span>";
+  try{
+    const dataUrl=await generateScoreImage();
+    const res=await fetch(dataUrl),blob=await res.blob(),file=new File([blob],"zoomer-score.png",{type:"image/png"});
+    if(navigator.share&&navigator.canShare&&navigator.canShare({files:[file]})){
+      await navigator.share({files:[file],title:"Zoomer Simulator 2026",text:`Ho fatto ${document.getElementById("end-score").textContent} punti! 🏋️ @beyond_the_platforms`});
+      btn.classList.remove("loading");btn.innerHTML=orig;return;
     }
-
-    // 2. Fallback: scarica immagine sul dispositivo
-    const a = document.createElement("a");
-    a.href = dataUrl;
-    a.download = "zoomer-score.png";
-    a.click();
-    btn.classList.remove("loading");
-    btn.classList.add("done");
-    btn.innerHTML = "<span>✅</span><span>Immagine salvata!</span>";
-    setTimeout(() => {
-      btn.classList.remove("done");
-      btn.innerHTML = origHTML;
-    }, 3000);
-
-  } catch(e) {
-    btn.classList.remove("loading");
-    btn.innerHTML = origHTML;
-    if (e.name !== "AbortError") {
-      toast("Condivisione non disponibile su questo browser", "#FF6B6B");
-    }
+    const a=document.createElement("a");a.href=dataUrl;a.download="zoomer-score.png";a.click();
+    btn.classList.remove("loading");btn.classList.add("done");btn.innerHTML="<span>✅</span><span>Salvata!</span>";
+    setTimeout(()=>{btn.classList.remove("done");btn.innerHTML=orig;},3000);
+  }catch(e){
+    btn.classList.remove("loading");btn.innerHTML=orig;
+    if(e.name!=="AbortError")toast("Condivisione non disponibile","#FF6B6B");
   }
 });
+
+// ============================================================ SETUP
+(function setup(){
+  const ag=document.getElementById("avatar-grid");
+  const preview=document.getElementById("avatar-preview");
+  const emojiInput=document.getElementById("avatar-input");
+  let selAv=AVATARS[0];
+
+  function setAvatar(em){
+    const v=[...em][0]||AVATARS[0];selAv=v;preview.textContent=v;
+    preview.classList.remove("bump");void preview.offsetWidth;preview.classList.add("bump");
+    document.querySelectorAll(".avatar-btn").forEach(b=>b.classList.toggle("selected",b.textContent===v));
+  }
+  AVATARS.forEach(a=>{
+    const btn=document.createElement("button");btn.className="avatar-btn"+(a===selAv?" selected":"");btn.textContent=a;
+    btn.addEventListener("click",()=>{emojiInput.value="";setAvatar(a);});ag.appendChild(btn);
+  });
+  emojiInput.addEventListener("input",()=>{const v=emojiInput.value.trim();if(v)setAvatar(v);});
+  emojiInput.addEventListener("keyup",()=>{const v=emojiInput.value.trim();if(v)setAvatar(v);});
+
+  const ni=document.getElementById("player-name"),sb=document.getElementById("start-btn");
+  ni.addEventListener("input",()=>{sb.disabled=!ni.value.trim();});
+  sb.addEventListener("click",()=>{
+    const name=ni.value.trim();if(!name)return;
+    initState(name,selAv);
+    addLog(`${selAv} ${name} inizia la sua epica avventura. In bocca al lupo!`,"neutral");
+    renderStats();updateGianluca();renderActions();showScreen("game");
+  });
+
+  document.getElementById("sleep-btn").addEventListener("click",nextDay);
+  document.getElementById("restart-btn").addEventListener("click",()=>{ni.value="";sb.disabled=true;showScreen("intro");});
+
+  // share intro
+  const shareBtn=document.getElementById("share-btn"),shareBadge=document.getElementById("share-badge"),SHARE_URL=window.location.href;
+  shareBtn.addEventListener("click",async()=>{
+    if(navigator.share){try{await navigator.share({title:"Zoomer Simulator 2026",text:"🏋️ Diventa il palestrato più iconico di Milano!",url:SHARE_URL});return;}catch(e){if(e.name==="AbortError")return;}}
+    try{await navigator.clipboard.writeText(SHARE_URL);shareBadge.textContent="✅ Link copiato!";shareBtn.classList.add("copied");setTimeout(()=>{shareBadge.textContent="Apri nel browser";shareBtn.classList.remove("copied");},2400);}
+    catch(e){prompt("Copia questo link:",SHARE_URL);}
+  });
+})();
 </script>
 </body>
 </html>
